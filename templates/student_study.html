@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><title>Study</title></head>
+<body>
+    <h1>Study</h1>
+    <p>Points: {{ current_user.points }}</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% if answered %}
+        {% if correct %}
+            <h2>Correct! +{{ question.point_value }} points</h2>
+        {% else %}
+            <h2>Incorrect. The answer was {{ question.correct_option.upper() }}</h2>
+        {% endif %}
+        <a href="/student/study"><button>Next Question</button></a>
+
+    {% else %}
+        <p><strong>{{ question.text }}</strong></p>
+        <form method="POST" action="/student/study/answer">
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+
+            <input type="radio" name="answer" value="a"> {{ question.option_a }}<br><br>
+            <input type="radio" name="answer" value="b"> {{ question.option_b }}<br><br>
+            <input type="radio" name="answer" value="c"> {{ question.option_c }}<br><br>
+            <input type="radio" name="answer" value="d"> {{ question.option_d }}<br><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="/student/dashboard">Back to dashboard</a>
+</body>
+</html>

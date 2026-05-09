@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head><title>Teacher Dashboard</title></head>
+<head><title>Student Dashboard</title></head>
 <body>
     <h1>Welcome, {{ current_user.first_name }}!</h1>
+    <p>Points: {{ current_user.points }}</p>
 
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
@@ -10,7 +11,8 @@
         {% endfor %}
     {% endwith %}
 
-    <a href="/teacher/questions"><button>View Questions</button></a>
+    <a href="/student/shop"><button>Shop</button></a>
+    <a href="/student/study"><button>Study</button></a>
 
     <br><br>
     <a href="/logout">Logout</a>

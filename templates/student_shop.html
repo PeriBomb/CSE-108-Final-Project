@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Shop</title></head>
+<body>
+    <h1>Card Shop</h1>
+    <p>Your points: {{ points }}</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/student/shop/buy">
+        <p>Buy a random card for 50 points</p>
+        <button type="submit">Buy Card</button>
+    </form>
+
+    <a href="/student/dashboard">Back to dashboard</a>
+</body>
+</html>
+

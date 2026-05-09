@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manage Questions</title></head>
+<body>
+    <h1>Questions</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% if questions %}
+        <table border="1" cellpadding="8">
+            <tr>
+                <th>Question</th>
+                <th>Points</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for q in questions %}
+            <tr>
+                <td>{{ q.text }}</td>
+                <td>{{ q.point_value }}</td>
+                <td>{{ "Active" if q.is_active else "Inactive" }}</td>
+                <td>
+                    <form method="POST" action="/teacher/question/{{ q.id }}/toggle" style="display:inline">
+                        <button type="submit">{{ "Deactivate" if q.is_active else "Activate" }}</button>
+                    </form>
+                    <form method="POST" action="/teacher/question/{{ q.id }}/delete" style="display:inline">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No questions yet.</p>
+    {% endif %}
+
+    <br>
+    <a href="/teacher/question/new"><button>Add New Question</button></a>
+    <br><br>
+    <a href="/teacher/dashboard">Back to dashboard</a>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # CSE-108-Final-Project
 
+# ClassPack teacher's tool
+
 Educational platform: Teachers can create a class and be given a unique class code to motivate students to join their class. Teachers can upload multiple choice questions based on current class content. Students can go online at their leisure and click through the questions endlessly for a reward of points. Points go towards randomized collectibles, which is a part of a collection (specific to the class. If we do an option for students to be part of multiple classes (I don't recommend that), their collection should start fresh). The collectibles can be viewed in a locker/cubby and can be seen by other students, and requested via a trading feature (maybe include a counter offer feature as well). Teachers can continue adding questions and can adjust point values as needed.
 
 Students:
