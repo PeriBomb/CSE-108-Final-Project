@@ -178,6 +178,44 @@ def student_shop():
         return redirect(url_for("login"))
     return render_template("student_shop.html", points=current_user.points)
 
+@app.route("/student/study")
+@login_required
+def student_study():
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+
+    enrollment = ClassEnrollment.query.filter_by(
+        student_id=current_user.id, status="active"
+    ).first()
+    if not enrollment:
+        flash("You are not enrolled in a class.")
+        return redirect(url_for("student_dashboard"))
+
+    questions = Question.query.filter_by(
+        class_id=enrollment.class_id, is_active=True
+    ).all()
+    if not questions:
+        flash("No questions available yet.")
+        return redirect(url_for("student_dashboard"))
+
+    question = random.choice(questions)
+    return render_template("student_study.html", question=question)
+
+
+@app.route("/student/study/answer", methods=["POST"])
+@login_required
+def student_study_answer():
+    question_id = request.form.get("question_id", type=int)
+    chosen = request.form.get("answer", "").lower()
+
+    question = Question.query.get_or_404(question_id)
+    correct = chosen.lower() == question.correct_option.lower()
+    if correct:
+        current_user.points += question.point_value
+        db.session.commit()
+
+    return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
+
 @app.route("/logout")
 def logout():
     logout_user()
