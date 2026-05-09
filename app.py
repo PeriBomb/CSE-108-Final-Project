@@ -221,7 +221,16 @@ def student_study_answer():
 def teacher_dashboard():
     if current_user.role != "teacher":
         return redirect(url_for("login"))
-    return render_template("teacher_dashboard.html")
+    classes = Class.query.filter_by(teacher_id=current_user.id).all()
+    class_data = []
+    for cls in classes:
+        students = [enrollment.student for enrollment in cls.enrollments if enrollment.status == "active"]
+        class_data.append({
+            "name": cls.name,
+            "join_code": cls.join_code,
+            "students": students
+        })
+    return render_template("teacher_dashboard.html", Classes=class_data)
 
 @app.route("/teacher/question/add", methods=["GET", "POST"])
 @login_required

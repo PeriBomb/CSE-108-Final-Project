@@ -15,10 +15,16 @@
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
-    <table>
 
-    </table>
-    <a href="/teacher/questions"><button>View Questions</button></a>
+    <h3>My classes</h3>
+    {% for item in Classes %}
+    <section>
+        <h4>{{ item.name }}</h4>
+        <p><strong>Class Code: </strong> {{ item.join_code }}</p>
+        <p><strong>Students: </strong> {{ item.students|length }}</p>
+        <a href="/teacher/questions"><button>View Questions</button></a> 
+    </section>
+    {% endfor %}
 
     <br><br>
     <form action="/logout" method="GET" style = "display: inline;">
