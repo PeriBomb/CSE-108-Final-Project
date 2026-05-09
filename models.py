@@ -49,6 +49,11 @@ class Class(db.Model):
     def active_student_count(self):
         return ClassEnrollment.query.filter_by(class_id=self.id, status="active").count()
  
+    @property
+    def students(self):
+        """Return list of active students in this class."""
+        return [enrollment.student for enrollment in self.enrollments if enrollment.status == "active"]
+ 
     def __repr__(self):
         return f"{self.name} ({self.join_code})"
 

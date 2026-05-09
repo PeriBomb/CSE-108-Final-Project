@@ -296,6 +296,17 @@ def teacher_delete_question(question_id):
     db.session.commit()
     flash("Question deleted.")
     return redirect(url_for("teacher_questions"))
+@app.route("/teacher/class/<string:join_code>")
+@login_required
+def teacher_class(join_code):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    cls = Class.query.filter_by(join_code=join_code).first_or_404()
+    students = [enrollment.student for enrollment in cls.enrollments if enrollment.status == "active"]
+    if cls.teacher_id != current_user.id:
+        flash("You do not have access to this class.")
+        return redirect(url_for("teacher_dashboard"))
+    return render_template("teacher_class.html", cls=cls)
 
 @app.route("/logout")
 def logout():
