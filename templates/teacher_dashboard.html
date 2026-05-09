@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
     <meta charset="UTF-8">
     <title>This is where the teacher dashboard will go</title>
 </head>
+=======
+<head><title>Teacher Dashboard</title></head>
+>>>>>>> 60d4dacb0b2a7b32d08f4bf13a59bd7cb46cb765
 <body>
-    
+    <h1>Welcome, {{ current_user.first_name }}!</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <a href="/teacher/questions"><button>View Questions</button></a>
+
+    <br><br>
+    <a href="/logout">Logout</a>
 </body>
 </html>
