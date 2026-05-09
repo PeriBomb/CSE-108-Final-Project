@@ -221,8 +221,10 @@ def student_study_answer():
 def teacher_dashboard():
     if current_user.role != "teacher":
         return redirect(url_for("login"))
+    # For each class, get the classes for the active user
     classes = Class.query.filter_by(teacher_id=current_user.id).all()
     class_data = []
+    #for each class, get the data for that class and pass to the template as a list of dicts with keys "name", "join_code", and "students"
     for cls in classes:
         students = [enrollment.student for enrollment in cls.enrollments if enrollment.status == "active"]
         class_data.append({
