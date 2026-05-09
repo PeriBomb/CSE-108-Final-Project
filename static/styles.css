@@ -70,6 +70,10 @@ button[disabled] {
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
+.logout-btn {
+    background: #390a68;
+}
+
 button[disabled]:hover {
     background: #4b2e83;
     transform: none;

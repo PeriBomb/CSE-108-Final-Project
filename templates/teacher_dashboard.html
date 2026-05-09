@@ -15,10 +15,14 @@
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
+    <table>
 
+    </table>
     <a href="/teacher/questions"><button>View Questions</button></a>
 
     <br><br>
-    <a href="/logout">Logout</a>
+    <form action="/logout" method="GET" style = "display: inline;">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
 </body>
 </html>
