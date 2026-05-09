@@ -18,10 +18,10 @@ Teachers:
 - [x] Create a class and be given a class code for students to use
 - [ ] Manage the class (remove students, etc)
 - [ ] Oversee trades and collections
-- [ ] Manage question list (add new questions, delete outdated ones, mark certain questions to be inactive/active)
+- [x] Manage question list (add new questions, delete outdated ones, mark certain questions to be inactive/active)
 
 Admins:
 - [x] Manage all user accounts
 - [x] Manage user account values (points, collectibles, etc)
 - [x] Manage question list
-- [ ] Again, I'm open to other project ideas too. Just wanted to write out my idea in the format they gave us for lab 8 to see what would have to be implemented
+
