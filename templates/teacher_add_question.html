@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head><title>New Question</title></head>
+<body>
+    <h1>Create New Question</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Question</label><br>
+        <textarea name="text" rows="3" cols="50"></textarea><br><br>
+
+        <label>Option A</label><br>
+        <input type="text" name="option_a"><br><br>
+
+        <label>Option B</label><br>
+        <input type="text" name="option_b"><br><br>
+
+        <label>Option C</label><br>
+        <input type="text" name="option_c"><br><br>
+
+        <label>Option D</label><br>
+        <input type="text" name="option_d"><br><br>
+
+        <label>Correct Option</label><br>
+        <select name="correct_option">
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+            <option value="d">D</option>
+        </select><br><br>
+
+        <label>Point Value</label><br>
+        <input type="number" name="point_value" value="10"><br><br>
+
+        <button type="submit">Save Question</button>
+    </form>
+
+    <br>
+    <a href="/teacher/dashboard">Back to dashboard</a>
+</body>
+</html>

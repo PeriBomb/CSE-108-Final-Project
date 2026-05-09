@@ -216,6 +216,76 @@ def student_study_answer():
 
     return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
 
+@app.route("/teacher/dashboard")
+@login_required
+def teacher_dashboard():
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    return render_template("teacher_dashboard.html")
+
+@app.route("/teacher/question/add", methods=["GET", "POST"])
+@login_required
+def teacher_add_question():
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+
+    classes = Class.query.filter_by(teacher_id=current_user.id).all()
+
+    if request.method == "POST":
+        q = Question(
+            class_id=classes[0].id,
+            text=request.form.get("text", "").strip(),
+            option_a=request.form.get("option_a", "").strip(),
+            option_b=request.form.get("option_b", "").strip(),
+            option_c=request.form.get("option_c", "").strip(),
+            option_d=request.form.get("option_d", "").strip(),
+            correct_option=request.form.get("correct_option", "a").lower(),
+            point_value=int(request.form.get("point_value", 10)),
+            is_active=True
+        )
+        db.session.add(q)
+        db.session.commit()
+        flash("Question created!")
+        return redirect(url_for("teacher_add_question"))
+
+    return render_template("teacher_add_question.html", classes=classes)
+
+@app.route("/teacher/questions")
+@login_required
+def teacher_questions():
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    classes = Class.query.filter_by(teacher_id=current_user.id).all()
+    if not classes:
+        flash("You have no classes yet.")
+        return redirect(url_for("teacher_dashboard"))
+    questions = Question.query.filter_by(class_id=classes[0].id).all()
+    return render_template("teacher_questions.html", questions=questions)
+
+
+@app.route("/teacher/question/<int:question_id>/toggle", methods=["POST"])
+@login_required
+def teacher_toggle_question(question_id):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    q = Question.query.get_or_404(question_id)
+    q.is_active = not q.is_active
+    db.session.commit()
+    flash(f"Question marked as {'active' if q.is_active else 'inactive'}.")
+    return redirect(url_for("teacher_questions"))
+
+
+@app.route("/teacher/question/<int:question_id>/delete", methods=["POST"])
+@login_required
+def teacher_delete_question(question_id):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    q = Question.query.get_or_404(question_id)
+    db.session.delete(q)
+    db.session.commit()
+    flash("Question deleted.")
+    return redirect(url_for("teacher_questions"))
+
 @app.route("/logout")
 def logout():
     logout_user()
