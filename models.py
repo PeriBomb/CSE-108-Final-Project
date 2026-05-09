@@ -31,9 +31,8 @@ class Class(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
     name        = db.Column(db.String(120), nullable=False)
     join_code   = db.Column(db.String(10), unique=True, nullable=False)
-    teacher_id  = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
- 
-    teacher      = db.relationship("User",            backref="taught_classes")
+    teacher_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False) 
+    teacher = db.relationship("User", backref=db.backref("taught_classes", passive_deletes=True))
     questions    = db.relationship("Question",        backref="class_ref", lazy=True, cascade="all, delete-orphan")
     collectibles = db.relationship("Collectible",     backref="class_ref", lazy=True, cascade="all, delete-orphan")
     enrollments  = db.relationship("ClassEnrollment", backref="class_ref", lazy=True, cascade="all, delete-orphan")
@@ -58,11 +57,11 @@ class ClassEnrollment(db.Model):
     __tablename__ = "class_enrollments"
  
     id         = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    class_id   = db.Column(db.Integer, db.ForeignKey("classes.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    class_id   = db.Column(db.Integer, db.ForeignKey("classes.id", ondelete="CASCADE"), nullable=False)
     status     = db.Column(db.String(20), nullable=False, default="active")  # active | removed
  
-    student = db.relationship("User", backref="class_enrollments")
+    student = db.relationship("User", backref=db.backref("class_enrollments", passive_deletes=True))
  
     def __repr__(self):
         return f"Enrollment(student={self.student_id}, class={self.class_id}, status={self.status})"

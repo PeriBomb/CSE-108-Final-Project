@@ -5,7 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from wtforms import PasswordField
 from extensions import db
-from models import User
+from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
@@ -67,6 +67,57 @@ def login():
 
     return render_template("login.html")
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username   = request.form.get("username", "").strip()
+        password   = request.form.get("password", "")
+        first_name = request.form.get("first_name", "").strip()
+        last_name  = request.form.get("last_name", "").strip()
+        role       = request.form.get("role", "student")
+        join_code  = request.form.get("join_code", "").strip().upper()
+
+        if User.query.filter_by(username=username).first():
+            flash("Username already taken.")
+            return render_template("register.html")
+
+        user = User(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            role=role,
+            points=0
+        )
+        user.set_password(password)
+        db.session.add(user)
+        db.session.flush()
+
+        if role == "student":
+            cls = Class.query.filter_by(join_code=join_code).first()
+            if not cls:
+                flash("Invalid class join code.")
+                db.session.rollback()
+                return render_template("register.html")
+            enrollment = ClassEnrollment(student_id=user.id, class_id=cls.id)
+            db.session.add(enrollment)
+        elif role == "teacher":
+            class_name = request.form.get("class_name", "").strip()
+            if class_name:
+                new_class = Class(
+                    name=class_name,
+                    join_code=Class.generate_join_code(),
+                    teacher_id=user.id
+                )
+                db.session.add(new_class)
+#
+        print("role:", role)
+        print("class_name:", request.form.get("class_name"))
+
+        db.session.commit()
+        flash("Account created! Please log in.")
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
 
 @app.route("/logout")
 def logout():
