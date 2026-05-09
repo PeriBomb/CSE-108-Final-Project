@@ -85,8 +85,8 @@ class Question(db.Model):
         return f"Question({self.id}: {self.text[:50]})"
 
 
-RARITY_LEVELS  = ["common", "uncommon", "rare", "legendary"]
-RARITY_WEIGHTS = [60, 25, 12, 3]   # drop-rate weights, must match order above
+RARITY_LEVELS  = ["common", "rare", "legendary"]
+RARITY_WEIGHTS = [60, 35, 5] 
  
  
 class Collectible(db.Model):
