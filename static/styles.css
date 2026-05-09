@@ -1,0 +1,92 @@
+body{
+    font-family: 'Quicksand', sans-serif;
+    margin: 40px;
+    background: #f5e6ff;
+    color: #2e0854;
+}
+
+h1,h2,h3,h4{
+    font-family: 'Fredoka', sans-serif;
+    color: #4b2e83;
+    
+}
+
+section {
+    background: #d6b3ff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 8px rgba(75, 46, 131, 0.15);
+}
+
+input {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #bda6ff;
+    background: #fff7ff;
+    color: #653397;
+    font-family: 'Quicksand', sans-serif;
+}
+
+input:focus {
+    outline: none;
+    border-color: #d6b3ff;
+    box-shadow: 0 0 6px rgba(214, 179, 255, 0.7);
+}
+
+input[type="number"]{
+    width: 140px;
+}
+button{
+    padding: 10px 18px;
+    border:none;
+    border-radius: 12px;
+    background: #4b2e83;
+    color: white;
+    font-weight: 600;
+    font-family: 'Quicksand', sans-serif;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 3px 6px rgba(75, 46, 131, 0.25);
+
+}
+
+button:hover{
+     background: #6a42c2;
+     transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 12px rgba(75, 46, 131, 0.3);
+}
+
+button:active{
+    transform: translateY(0px);
+    box-shadow: 0 2px 4px rgba(75, 46, 131, 0.2);
+}
+
+button[disabled] {
+    background: #4b2e83;
+    cursor: not-allowed;
+    opacity: 0.85;
+    transform:none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+button[disabled]:hover {
+    background: #4b2e83;
+    transform: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+table {
+    margin-top:15px;
+    margin: 15px auto;
+    border-collapse:collapse;
+    width:70%;
+    background: #ffeaff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(75, 46, 131, 0.15);
+}   
+
+td,th{
+    border: 1px solid #cbb7ff;
+    padding: 10px;
+}
