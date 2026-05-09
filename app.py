@@ -5,7 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from wtforms import PasswordField
 from extensions import db
-from models import User
+from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
@@ -38,8 +38,15 @@ class UserAdminView(ModelView):
 
 
 
-admin = Admin(app, name="Lab-08 Admin View")
+admin = Admin(app, name="ClassPack Admin View")
 admin.add_view(UserAdminView(User, db.session))
+admin.add_view(ModelView(Class, db.session))
+admin.add_view(ModelView(ClassEnrollment, db.session))
+admin.add_view(ModelView(Question, db.session))
+admin.add_view(ModelView(Collectible, db.session))
+admin.add_view(ModelView(StudentCollectible, db.session))
+admin.add_view(ModelView(TradeRequest, db.session))
+
 
 
 @app.route("/")
