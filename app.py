@@ -5,7 +5,8 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from wtforms import PasswordField
 from extensions import db
-from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest
+from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest, RARITY_LEVELS, RARITY_WEIGHTS
+import random
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
@@ -24,7 +25,7 @@ def load_user(user_id):
 class UserAdminView(ModelView):
     column_exclude_list = ["password"]
     form_excluded_columns = ["password"]
-    form_columns = ["first_name", "last_name", "username", "password_input", "email", "role"]
+    form_columns = ["first_name", "last_name", "username", "password_input", "email", "role", "points"]
     form_extra_fields = {
         "password_input": PasswordField("Password")
     }
@@ -126,10 +127,63 @@ def register():
 
     return render_template("register.html")
 
+@app.route("/student/dashboard")
+@login_required
+def student_dashboard():
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+    return render_template("student_dashboard.html")
+
+@app.route("/student/shop/buy", methods=["POST"])
+@login_required
+def student_buy_card():
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+
+    if current_user.points < 50:
+        flash("Not enough points.")
+        return redirect(url_for("student_shop"))
+
+    enrollment = ClassEnrollment.query.filter_by(
+        student_id=current_user.id, status="active"
+    ).first()
+    if not enrollment:
+        flash("You are not enrolled in a class.")
+        return redirect(url_for("student_shop"))
+
+    pool = Collectible.query.filter_by(class_id=enrollment.class_id).all()
+    if not pool:
+        flash("No collectibles available yet.")
+        return redirect(url_for("student_shop"))
+
+    weights = []
+    for c in pool:
+        idx = RARITY_LEVELS.index(c.rarity) if c.rarity in RARITY_LEVELS else 0
+        weights.append(RARITY_WEIGHTS[idx])
+
+    chosen = random.choices(pool, weights=weights, k=1)[0]
+    sc = StudentCollectible(student_id=current_user.id, collectible_id=chosen.id)
+    current_user.points -= 50
+    db.session.add(sc)
+    db.session.commit()
+
+    flash(f"You got: {chosen.emoji} {chosen.name} ({chosen.rarity})")
+    return redirect(url_for("student_shop"))
+
+
+@app.route("/student/shop")
+@login_required
+def student_shop():
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+    return render_template("student_shop.html", points=current_user.points)
+
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
+with app.app_context():
+    db.create_all()
 if __name__ == "__main__":
     app.run(debug=True)
