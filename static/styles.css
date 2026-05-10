@@ -207,5 +207,75 @@ input[type="radio"] {
 .floating-label input:focus, .floating-label input:not(:placeholder-shown) {
     padding: 14px 12px;
     width: calc(100% - 40px);
-    margin-left: 40px;
+    margin-left: 50px;
+}
+.floating-select {
+    appearance: none;
+    width: 100%;
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+    font-family: 'Quicksand', sans-serif;
+}
+.floating-select select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 2px solid #d5c4ff;
+    border-radius: 10px;
+    background: #fff7ff;
+    color: #2e0854;
+    outline: none;
+    transition: 
+        padding-top 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+.floating-select select:focus {
+    font-size: 16px;
+    border-color: #a88bff;
+    box-shadow: 0 0 10px rgba(171, 140, 255, 0.4);
+}
+.floating-select label{
+    visibility: hidden;
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    color: #8a6acb;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 
+        0.3s ease,
+        transform 0.3s ease;
+    opacity: 0.9;
+}
+.floating-select select:focus + label,
+.floating-select select:valid + label {
+    visibility: visible;
+    top: 16px;
+    left: -50px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #4b2e83;
+    opacity: 1;
+    transform: translateX(0);
+}
+.floating-select select:focus + label::after,
+.floating-select select:valid + label::after {
+    content: ":";
+}
+
+.floating-select select:focus, .floating-select select:valid {
+    height: 48px;
+    font-size: 16px;
+    padding: 0 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    width: calc(100% - 40px);
+    margin-left: 50px;
+
+}
+
+.floating-label input, .floating-select select {
+    box-sizing: border-box;
 }

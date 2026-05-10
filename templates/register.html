@@ -6,40 +6,88 @@
     <meta charset="UTF-8">
     <title>Create Account</title>
 </head>
-<body>
-    <h1>Create Account</h1>
+<body style="margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; background: linear-gradient(135deg, #f0c6ffbb, #bd8ff2d4);">
+<section style="max-width: 800px; margin:0 auto; padding: 20px;">
+    <div style="display:flex; align-items: flex-end; justify-content: left;">
+        <img src="/static/star-svgrepo-com-filled.svg" alt="Star Icon" style="width: 80px; height: 80px; margin: 0; padding: 0;">
+        <h1 style="margin: 0 0 0 20px; line-height: 2; transform:translateY(2px); text-shadow: 2px 2px 4px rgba(30, 1, 83, 0.3);"> Lucky Star Academy</h1>
+    </div>
+    <h2>Create Account</h2>
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
     <form method="POST">
-        <label>First Name</label><br>
-        <input type="text" name="first_name"><br><br>
+        <div class="floating-label">
+            <input type="text" name="first_name" id="first_name" required placeholder=" ">
+            <label for="first_name">First Name</label>
+        </div>
 
-        <label>Last Name</label><br>
-        <input type="text" name="last_name"><br><br>
+        <div class="floating-label">
+            <input type="text" name="last_name" id="last_name" required placeholder=" ">
+            <label for="last_name">Last Name</label>
+        </div>
 
-        <label>Username</label><br>
-        <input type="text" name="username"><br><br>
+        <div class="floating-label">
+            <input type="text" name="username" id="username" required placeholder=" ">
+            <label for="username">Username</label>
+        </div>
 
-        <label>Password</label><br>
-        <input type="password" name="password"><br><br>
+        <div class="floating-label">
+            <input type="password" name="password" id="password" required placeholder=" ">
+            <label for="password">Password</label>
+        </div>
+        <div class="floating-select">
+            <select name="role" required onchange="toggleFields()">
+                <option value="" disabled selected>Role</option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+            </select>
+            <label for="role"><strong>Role</strong></label>
+        </div>
 
-        <label>Role</label><br>
-        <select name="role">
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-        </select><br><br>
+        
+        <div class="floating-label">
+            <input type="text" name="join_code" id="join_code" placeholder=" ">
+            <label for="join_code">Class Code</label>
+        </div><br>
 
-        <label>Class Join Code (students only)</label><br>
-        <input type="text" name="join_code"><br><br>
+        <div class="floating-label">
+            <input type="text" name="class_name" id="class_name" placeholder=" ">
+            <label for="class_name">Class Name</label>
+        </div><br>
+        <script>
+            // Get the role select element
+            const roleSelect = document.querySelector('.floating-select select');
+            const joinCodeField = document.getElementById('join_code').parentElement; // Get the parent div of the join code field
+            const classNameField = document.getElementById('class_name').parentElement; // Get the parent div of the class name field
 
-        <label>Class Name (Teachers only)</label><br>
-        <input type="text" name="class_name"><br><br>
+            // Function to toggle visibility based on selected role
+            function toggleFields() {
+                const selectedRole = roleSelect.value;
+                if (selectedRole === 'student') {
+                    joinCodeField.style.display = 'block'; // Show join code field
+                    classNameField.style.display = 'none'; // Hide class name field
+                } else if (selectedRole === 'teacher') {
+                    joinCodeField.style.display = 'none'; // Hide join code field
+                    classNameField.style.display = 'block'; // Show class name field
+                } else {
+                    joinCodeField.style.display = 'none'; // Hide both fields if no valid role is selected
+                    classNameField.style.display = 'none';
+                }
+            }
+
+            // Attach event listener to the select element
+            roleSelect.addEventListener('change', toggleFields);
+
+            // Initialize fields visibility on page load
+            toggleFields();
+        </script>
 
         <button type="submit">Create Account</button>
     </form>
     <p><a href="/login">Back to login</a></p>
+</section>
 </body>
 </html>
