@@ -169,11 +169,8 @@ def student_dashboard():
         db.session.add(enrollment)
         db.session.commit()
         flash(f"Joined class: {cls.name}")
-
-    # fetch the name of the class if class is joined
-    enrollment = ClassEnrollment.query.filter_by(student_id=current_user.id, status="active").all()
-
-    return render_template("student_dashboard.html", enrollment=enrollment)
+        
+    return render_template("student_dashboard.html")
 
 # Process student purchasing collectible card from shop - costs 50 points
 @app.route("/student/shop/buy", methods=["POST"])
@@ -277,9 +274,12 @@ def student_study_answer():
 @app.route("/student/collection")
 @login_required
 def student_collection():
+    if current_user.role != "student":
+        return redirect(url_for("login"))
     # create an array containing students collection to be passed into render_template
-
-    return render_template("student_collection.html")
+    # query student collectibles for collectibles with current student id
+    collection = StudentCollectible.query.filter_by(student_id=current_user.id).all()
+    return render_template("student_collection.html", collection=collection)
 
 # Teacher home page - manage their classes and students
 @app.route("/teacher/dashboard", methods=["POST", "GET"])

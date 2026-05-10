@@ -10,6 +10,19 @@
     <h1>Collection</h1>
     <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
     
+    <div>
+        <h3>Your Trading Cards:</h3>
+        <ul>
+            {% for instance in current_user.owned_collectibles %}
+                <li>
+                    <strong>{{ instance.collectible.name }}</strong> 
+                </li>
+            {% else %}
+                <p>Your collection is currently empty</p>
+            {% endfor %}
+        </ul>
+    </div>
+
     <a href="/student/dashboard">Back to dashboard</a>
 </body>
 </html>
