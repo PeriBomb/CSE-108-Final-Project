@@ -32,8 +32,8 @@
                     <form method="POST" action="/teacher/question/{{ q.id }}/toggle" style="display:inline">
                         <button type="submit">{{ "Deactivate" if q.is_active else "Activate" }}</button>
                     </form>
-                     <a href="/teacher/question/{{ q.id }}/edit"><button>Edit</button></a>
-                        <form method="POST" action="/teacher/question/{{ q.id }}/delete" style="display:inline">
+                    <a href="/teacher/question/{{ q.id }}/edit" style="display:inline"><button>Edit</button></a>
+                    <form method="POST" action="/teacher/question/{{ q.id }}/delete" style="display:inline">
                         <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
                 </td>

@@ -316,8 +316,7 @@ def teacher_class(join_code):
     cls = Class.query.filter_by(join_code=join_code).first_or_404()
     if cls.teacher_id != current_user.id:
         flash("You do not have access to this class.")
-        return redirect(url_for("teacher_dashboard"))
-    
+        return redirect(url_for("teacher_dashboard"))    
     if request.method == "POST" and request.form.get("_method") == "DELETE":
         student_id = request.form.get("student_id", type=int)
         if student_id:
@@ -332,7 +331,29 @@ def teacher_class(join_code):
     
     # GET request: display the class
     return render_template("teacher_class.html", cls=cls)
+@app.route("/teacher/question/<int:question_id>/edit", methods=["GET", "POST"])
+def teacher_edit_question(question_id):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    q = Question.query.get_or_404(question_id)
+    cls = Class.query.get(q.class_id)
+    if cls.teacher_id != current_user.id:
+        flash("You do not have access to this question.")
+        return redirect(url_for("teacher_dashboard"))
+    
+    if request.method == "POST":
+        q.text = request.form.get("text", "").strip()
+        q.option_a = request.form.get("option_a", "").strip()
+        q.option_b = request.form.get("option_b", "").strip()
+        q.option_c = request.form.get("option_c", "").strip()
+        q.option_d = request.form.get("option_d", "").strip()
+        q.correct_option = request.form.get("correct_option", "a").lower()
+        q.point_value = int(request.form.get("point_value", 10))
+        db.session.commit()
+        flash("Question updated!")
+        return redirect(url_for("teacher_questions"))
 
+    return render_template("teacher_edit_question.html", question=q)
 @app.route("/logout")
 def logout():
     logout_user()

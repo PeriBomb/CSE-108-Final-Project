@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8">
+    <title>Edit Question</title>
+</head>
+<body>
+    <h1>Edit Question</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Question</label><br>
+        <textarea name="text" rows="3" cols="50">{{ question.text }}</textarea><br><br>
+
+        <label>Option A</label><br>
+        <input type="text" name="option_a" value="{{ question.option_a }}"><br><br>
+
+        <label>Option B</label><br>
+        <input type="text" name="option_b" value="{{ question.option_b }}"><br><br>
+
+        <label>Option C</label><br>
+        <input type="text" name="option_c" value="{{ question.option_c }}"><br><br>
+
+        <label>Option D</label><br>
+        <input type="text" name="option_d" value="{{ question.option_d }}"><br><br>
+
+        <label>Correct Option</label><br>
+        <select name="correct_option">
+            <option value="a" {% if question.correct_option == 'a' %}selected{% endif %}>A</option>
+            <option value="b" {% if question.correct_option == 'b' %}selected{% endif %}>B</option>
+            <option value="c" {% if question.correct_option == 'c' %}selected{% endif %}>C</option>
+            <option value="d" {% if question.correct_option == 'd' %}selected{% endif %}>D</option>
+        </select><br><br>
+
+        <label>Point Value</label><br>
+        <input type="number" name="point_value" value="{{ question.point_value }}"><br><br>
+
+        <button type="submit">Update Question</button>
+    </form>
+
+    <br>
+    <a href="/teacher/questions">Back to questions</a>
+</body>
+</html>
