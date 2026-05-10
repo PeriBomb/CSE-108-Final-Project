@@ -19,7 +19,7 @@ section {
     box-shadow: 0 4px 8px rgba(75, 46, 131, 0.15);
 }
 
-input {
+input, select {
     padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid #bda6ff;
@@ -28,7 +28,7 @@ input {
     font-family: 'Quicksand', sans-serif;
 }
 
-input:focus {
+input:focus, select:focus {
     outline: none;
     border-color: #d6b3ff;
     box-shadow: 0 0 6px rgba(214, 179, 255, 0.7);
