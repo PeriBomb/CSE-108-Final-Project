@@ -493,6 +493,9 @@ def teacher_edit_question(question_id):
 def logout():
     logout_user()  # Clear login session
     return redirect(url_for("login"))
+@socketio.on("message")
+def handle_message(data):
+    print(f"Received message: {data}")
 
 # Initialize database tables on startup
 with app.app_context():
