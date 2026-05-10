@@ -8,7 +8,50 @@ body{
 h1,h2,h3,h4{
     font-family: 'Fredoka', sans-serif;
     color: #4b2e83;
-    
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-option .custom-radio {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    transition: transform 0.2s ease;
+    background-image: url('/static/star-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.radio-option:hover .custom-radio {
+    transform: scale(1.05);
+}
+
+.radio-option input[type="radio"]:checked + .custom-radio {
+    background-image: url('/static/star-svgrepo-com-filled.svg');
+}
+
+.radio-option span.option-label {
+    color: #2e0854;
 }
 
 section {
@@ -98,4 +141,13 @@ table {
 td,th{
     border: 1px solid #cbb7ff;
     padding: 10px;
+}
+/* Remove old mask-based radio styles; custom radio labels handle appearance instead */
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
 }

@@ -32,10 +32,26 @@
         <form method="POST" action="/student/study/answer">
             <input type="hidden" name="question_id" value="{{ question.id }}">
 
-            <input type="radio" name="answer" value="a"> {{ question.option_a }}<br><br>
-            <input type="radio" name="answer" value="b"> {{ question.option_b }}<br><br>
-            <input type="radio" name="answer" value="c"> {{ question.option_c }}<br><br>
-            <input type="radio" name="answer" value="d"> {{ question.option_d }}<br><br>
+            <label class="radio-option">
+                <input type="radio" name="answer" value="a">
+                <span class="custom-radio"></span>
+                <span class="option-label">{{ question.option_a }}</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="answer" value="b">
+                <span class="custom-radio"></span>
+                <span class="option-label">{{ question.option_b }}</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="answer" value="c">
+                <span class="custom-radio"></span>
+                <span class="option-label">{{ question.option_c }}</span>
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="answer" value="d">
+                <span class="custom-radio"></span>
+                <span class="option-label">{{ question.option_d }}</span>
+            </label>
 
             <button type="submit">Submit</button>
         </form>
