@@ -1,8 +1,11 @@
 body{
     font-family: 'Quicksand', sans-serif;
     margin: 40px;
-    background: #f5e6ff;
     color: #2e0854;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column; 
+    background: linear-gradient(135deg, #f0c6ffbb, #bd8ff2d4);
 }
 
 h1,h2,h3,h4{
