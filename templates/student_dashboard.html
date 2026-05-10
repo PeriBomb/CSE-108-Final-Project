@@ -21,17 +21,31 @@
 
     <div>
         <h3>Your Classes:</h3>
-        <ul>
-            {% for enrollment in current_user.class_enrollments %}
-                {% if enrollment.status == 'active' %}
-                    <li>
-                        <strong>{{ enrollment.class_ref.name }}</strong> 
-                    </li>
-                {% endif %}
-            {% else %}
-                <p>You haven't joined any classes yet!</p>
-            {% endfor %}
-        </ul>
+        {% set active_classes = current_user.class_enrollments|selectattr("status", "equalto", "active")|list%}
+        {% if active_classes %}
+        <table align = "left" style="float: none;">
+            <tr>
+                <td><strong>Class </strong></td>
+                <td><strong>Teacher</strong></td>
+                <td><strong>Action</strong></td>
+            </tr>
+                {% for enrollment in active_classes %}
+                    <tr>
+                        <td>
+                            <strong>{{ enrollment.class_ref.name }}</strong>
+                        </td>
+                        <td>
+                            {{ enrollment.class_ref.teacher.first_name }} {{ enrollment.class_ref.teacher.last_name }}
+                        </td>
+                        <td>
+                            <a href="/student/class/{{ enrollment.class_ref.id }}"><button>View Class</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+            </table>
+        {% else %}
+            <p>You haven't joined any classes yet!</p>
+        {% endif %}
     </div>
 
     <br><br>

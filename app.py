@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_socketio import SocketIO
 from wtforms import PasswordField
 from extensions import db
 from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest, RARITY_LEVELS, RARITY_WEIGHTS
@@ -14,7 +15,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"  # Use SQLite database file
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "dev-secret-key"  # Secret key for sessions
-
+socketio = SocketIO(app)  # Initialize SocketIO for real-time features (not used yet)
 # Initialize the database with the app
 db.init_app(app)
 
@@ -166,10 +167,15 @@ def student_dashboard():
             return render_template("student_dashboard.html")
         # Add student to the class
         enrollment = ClassEnrollment(student_id=current_user.id, class_id=cls.id)
-        db.session.add(enrollment)
-        db.session.commit()
+        active = ClassEnrollment.query.filter_by(student_id=current_user.id, class_id=cls.id, status="active").first()
+        if active:
+            flash("You are already enrolled in this class.")
+            return render_template("student_dashboard.html")
+        else:
+            db.session.add(enrollment)
+            db.session.commit()
         flash(f"Joined class: {cls.name}")
-        
+        return redirect("/student/dashboard")
     return render_template("student_dashboard.html")
 
 # Process student purchasing collectible card from shop - costs 50 points
@@ -494,4 +500,4 @@ with app.app_context():
 
 # Run the Flask server
 if __name__ == "__main__":
-    app.run(debug=True)  # Start development server
+    socketio.run(app, debug=True)  # Start development server
