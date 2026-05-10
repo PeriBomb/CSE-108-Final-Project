@@ -80,10 +80,9 @@ class ClassEnrollment(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  # Which student
     class_id   = db.Column(db.Integer, db.ForeignKey("classes.id", ondelete="CASCADE"), nullable=False)  # Which class
     status     = db.Column(db.String(20), nullable=False, default="active")  # active | removed (for tracking if removed from class)
-
+ 
     # Link to the student enrolled
     student = db.relationship("User", backref=db.backref("class_enrollments", passive_deletes=True))
-    student_class = db.relationship("Class", backref="class_enrollments")
  
     # Display enrollment in readable format
     def __repr__(self):
@@ -127,6 +126,8 @@ class Collectible(db.Model):
     rarity      = db.Column(db.String(20), nullable=False, default="common")  # How rare it is
     emoji       = db.Column(db.String(10), nullable=False, default="🦂")  # Icon/emoji to display
  
+    
+    
     # Display collectible type instead of raw object
     def __repr__(self):
         return f"Collectible({self.name}, {self.rarity})"
