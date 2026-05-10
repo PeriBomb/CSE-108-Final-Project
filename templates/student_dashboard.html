@@ -40,9 +40,6 @@
                         </td>
                         <td>
                             <a href="/student/class/{{ enrollment.class_ref.id }}"><button>View Class</button></a>
-                            <p><a href="/student/leave_class/{{ enrollment.class_ref.id }}" onclick="return confirm('Are you sure you want to leave this class?');">
-                                <button>Leave Class</button>
-                            </a></p>
                         </td>
                     </tr>
                     {% endfor %}

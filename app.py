@@ -176,7 +176,27 @@ def student_dashboard():
             db.session.commit()
         flash(f"Joined class: {cls.name}")
         return redirect("/student/dashboard")
+    
     return render_template("student_dashboard.html")
+
+@app.route("/student/leave_class/<int:enrollment_id>", methods=["POST"])
+@login_required
+def student_leave_class(enrollment_id):
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+    
+    enrollment = ClassEnrollment.query.filter_by(id=enrollment_id, student_id=current_user.id).first_or_404()
+
+    try:
+        db.session.delete(enrollment)
+        db.session.commit()
+        flash("You have successfully left the class.")
+    except Exception as e:
+        db.session.rollback()
+        flash("An error occurred while trying to leave the class.")
+        print(f"Error: {e}")
+    return redirect("/student/dashboard")
+
 
 # Process student purchasing collectible card from shop - costs 50 points
 @app.route("/student/shop/buy", methods=["POST"])
