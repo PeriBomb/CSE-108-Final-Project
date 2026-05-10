@@ -58,8 +58,6 @@ admin.add_view(ModelView(Collectible, db.session))  # Admin can manage collectib
 admin.add_view(ModelView(StudentCollectible, db.session))  # Admin can manage what students have collected
 admin.add_view(ModelView(TradeRequest, db.session))  # Admin can manage trade requests between students
 
-
-
 # Home page - just redirects to login
 @app.route("/")
 def index():
@@ -157,7 +155,7 @@ def student_dashboard():
     # Make sure user is actually a student (not a teacher or admin)
     if current_user.role != "student":
         return redirect(url_for("login"))
-    
+
     if request.method == "POST":
         # Student is trying to join a new class with a join code
         join_code = request.form.get("join_code", "").strip().upper()
@@ -171,7 +169,12 @@ def student_dashboard():
         db.session.add(enrollment)
         db.session.commit()
         flash(f"Joined class: {cls.name}")
-    return render_template("student_dashboard.html")
+
+    # fetch the name of the class if class is joined
+    enrollment = ClassEnrollment.query.filter_by(student_id=current_user.id, status="active").all()
+
+    return render_template("student_dashboard.html", enrollment=enrollment)
+
 # Process student purchasing collectible card from shop - costs 50 points
 @app.route("/student/shop/buy", methods=["POST"])
 @login_required  # Must be logged in
@@ -269,6 +272,14 @@ def student_study_answer():
 
     # Return the same question with results (showing if correct/incorrect)
     return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
+
+# Shows only the current student's collection
+@app.route("/student/collection")
+@login_required
+def student_collection():
+    # create an array containing students collection to be passed into render_template
+
+    return render_template("student_collection.html")
 
 # Teacher home page - manage their classes and students
 @app.route("/teacher/dashboard", methods=["POST", "GET"])

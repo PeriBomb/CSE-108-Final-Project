@@ -17,6 +17,23 @@
     <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
     <a href="/student/shop"><button>Shop</button></a>
     <a href="/student/study"><button>Study</button></a>
+    <a href="/student/collection"><button>View Collection</button></a>
+
+    <div>
+        <h3>Your Classes:</h3>
+        <ul>
+            {% for enrollment in current_user.class_enrollments %}
+                {% if enrollment.status == 'active' %}
+                    <li>
+                        <strong>{{ enrollment.class_ref.name }}</strong> 
+                    </li>
+                {% endif %}
+            {% else %}
+                <p>You haven't joined any classes yet!</p>
+            {% endfor %}
+        </ul>
+    </div>
+
     <br><br>
     <form method="POST">
         <input type = "text" name = "join_code" placeholder = "Class Join Code">
