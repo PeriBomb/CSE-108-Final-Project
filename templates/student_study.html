@@ -25,6 +25,7 @@
         <a href="/student/study"><button>Next Question</button></a>
 
     {% else %}
+    <section>
         <p><strong>{{ question.text }}</strong></p>
         <form method="POST" action="/student/study/answer">
             <input type="hidden" name="question_id" value="{{ question.id }}">
@@ -36,6 +37,7 @@
 
             <button type="submit">Submit</button>
         </form>
+    </section>
     {% endif %}
 
     <br>

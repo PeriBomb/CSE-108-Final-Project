@@ -7,18 +7,26 @@
     <title>Student Dashboard</title></head>
 <body>
     <h1>Welcome, {{ current_user.first_name }}!</h1>
-    <p>Points: {{ current_user.points }}</p>
 
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
-
+    <section>
+    <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
     <a href="/student/shop"><button>Shop</button></a>
     <a href="/student/study"><button>Study</button></a>
-
     <br><br>
-    <a href="/logout">Logout</a>
+    <form method="POST">
+        <input type = "text" name = "join_code" placeholder = "Class Join Code">
+        <button type="submit">Add New Class</button>
+    </form>
+    <br><br>
+    </section>
+    <form action="/logout" method="GET" style = "display: inline;">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+
 </body>
 </html>
