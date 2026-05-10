@@ -16,6 +16,16 @@
     {% endwith %}
 
     <form method="POST">
+        <label>Class</label><br>
+        <select name="class_id" required>
+            <option value="">Select a class</option>
+            {% for cls in classes %}
+                <option value="{{ cls.id }}" {% if selected_class_id and cls.id == selected_class_id %}selected{% endif %}>
+                    {{ cls.name }} ({{ cls.join_code }})
+                </option>
+            {% endfor %}
+        </select><br><br>
+
         <label>Question</label><br>
         <textarea name="text" rows="3" cols="50"></textarea><br><br>
 

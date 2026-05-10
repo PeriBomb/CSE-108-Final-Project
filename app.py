@@ -233,6 +233,17 @@ def teacher_dashboard():
             "students": students
         })
     if request.method == "POST":
+        if request.form.get("_method") == "DELETE":
+            join_code = request.form.get("join_code", "").strip()
+            cls = Class.query.filter_by(join_code=join_code, teacher_id=current_user.id).first()
+            if cls:
+                db.session.delete(cls)
+                db.session.commit()
+                flash("Class deleted.")
+            else:
+                flash("Class not found or you do not have permission to delete it.")
+            return redirect(url_for("teacher_dashboard"))
+
         class_name = request.form.get("class_name", "").strip()
         if class_name:
             new_class = Class(
@@ -243,20 +254,33 @@ def teacher_dashboard():
             db.session.add(new_class)
             db.session.commit()
             flash("Class created!")
-            return redirect(url_for("teacher_dashboard"))
-    
+            return redirect(url_for("teacher_dashboard"))    
     return render_template("teacher_dashboard.html", Classes=class_data)
+
 @app.route("/teacher/question/add", methods=["GET", "POST"])
+@app.route("/teacher/question/add/<string:join_code>", methods=["GET", "POST"])
 @login_required
-def teacher_add_question():
+def teacher_add_question(join_code=None):
     if current_user.role != "teacher":
         return redirect(url_for("login"))
 
     classes = Class.query.filter_by(teacher_id=current_user.id).all()
+    selected_class_id = None
+
+    if join_code:
+        selected_class = Class.query.filter_by(join_code=join_code, teacher_id=current_user.id).first()
+        if selected_class:
+            selected_class_id = selected_class.id
 
     if request.method == "POST":
+        selected_class_id = request.form.get("class_id", type=int)
+        cls = Class.query.filter_by(id=selected_class_id, teacher_id=current_user.id).first()
+        if not cls:
+            flash("Please select a valid class.")
+            return redirect(url_for("teacher_add_question", join_code=join_code) if join_code else url_for("teacher_add_question"))
+
         q = Question(
-            class_id=classes[0].id,
+            class_id=cls.id,
             text=request.form.get("text", "").strip(),
             option_a=request.form.get("option_a", "").strip(),
             option_b=request.form.get("option_b", "").strip(),
@@ -269,9 +293,9 @@ def teacher_add_question():
         db.session.add(q)
         db.session.commit()
         flash("Question created!")
-        return redirect(url_for("teacher_add_question"))
+        return redirect(url_for("teacher_add_question", join_code=join_code) if join_code else url_for("teacher_add_question"))
 
-    return render_template("teacher_add_question.html", classes=classes)
+    return render_template("teacher_add_question.html", classes=classes, selected_class_id=selected_class_id, join_code=join_code)
 
 @app.route("/teacher/questions")
 @login_required
@@ -284,6 +308,16 @@ def teacher_questions():
         return redirect(url_for("teacher_dashboard"))
     questions = Question.query.filter_by(class_id=classes[0].id).all()
     return render_template("teacher_questions.html", questions=questions)
+
+
+@app.route("/teacher/questions/<string:join_code>")
+@login_required
+def teacher_class_questions(join_code):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+    cls = Class.query.filter_by(join_code=join_code, teacher_id=current_user.id).first_or_404()
+    questions = Question.query.filter_by(class_id=cls.id).all()
+    return render_template("teacher_questions.html", questions=questions, current_class=cls)
 
 
 @app.route("/teacher/question/<int:question_id>/toggle", methods=["POST"])

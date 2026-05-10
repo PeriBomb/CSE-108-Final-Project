@@ -7,7 +7,7 @@
     <title>Manage Questions</title>
 </head>
 <body>
-    <h1>Questions</h1>
+    <h1>Questions{% if current_class %} for {{ current_class.name }}{% endif %}</h1>
 
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
@@ -45,7 +45,7 @@
     {% endif %}
 
     <br>
-    <a href="/teacher/question/add"><button>Add New Question</button></a>
+    <a href="/teacher/question/add{% if current_class %}/{{ current_class.join_code }}{% endif %}"><button>Add New Question</button></a>
     <br><br>
     <a href="/teacher/dashboard">Back to dashboard</a>
 </body>
