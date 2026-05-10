@@ -7,20 +7,32 @@
     <title>Login</title>
     <title>ClassPack Login</title>
 </head>
-<body>
-    <h1>Login</h1>
+<body style="margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; background: linear-gradient(135deg, #f0c6ffbb, #bd8ff2d4);">
+    <h1 style = "font-size: 400%; text-shadow: 2px 2px 4px rgba(30, 1, 83, 0.3);"> Welcome to ClassPack! </h1>
+    <br><br>
+<section style="max-width: 800px; margin:0 auto; padding: 20px;">
+    <div style="display:flex; align-items: flex-end; justify-content: left;">
+        <img src="/static/star-svgrepo-com-filled.svg" alt="Star Icon" style="width: 80px; height: 80px; margin: 0; padding: 0;">
+        <h1 style="margin: 0 0 0 20px; line-height: 2; transform:translateY(2px); text-shadow: 2px 2px 4px rgba(30, 1, 83, 0.3);"> Lucky Star Academy</h1>
+    </div>
+    <h2 align="left" padding="20px;" style="font-weight: normal;">Single Sign-On</h2>
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
-            <p>{{ message }}</p>
+            <p align="center">{{ message }}</p>
         {% endfor %}
     {% endwith %}
-    <form method="POST">
-        <label>Username</label><br>
-        <input type="text" name="username"><br><br>
-        <label>Password</label><br>
-        <input type="password" name="password"><br><br>
+    <form align="left" method="POST">
+        <div class="floating-label">
+            <input type="text" name="username" placeholder=" ">
+            <label>Username</label>
+        </div>
+        <div class="floating-label">
+            <input type="password" name="password" placeholder=" ">
+            <label>Password</label>
+        </div>
         <button type="submit">Login</button>
     </form>
-    <p>Don't have an account? <a href="/register">Create one</a></p>
+    <p align="left">Don't have an account? <a href="/register">Create one</a></p>
+</section>
 </body>
 </html>

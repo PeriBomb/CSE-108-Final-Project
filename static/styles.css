@@ -151,3 +151,61 @@ input[type="radio"] {
     width: 0;
     height: 0;
 }
+.floating-label {
+    width: 100%;
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+    font-family: 'Quicksand', sans-serif;
+}
+.floating-label input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #d5c4ff;
+    border-radius: 10px;
+    background: #fff7ff;
+    color: #2e0854;
+    outline: none;
+    transition: 
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        padding-top 0.25s ease;
+}
+/*glow on focus*/
+.floating-label input:focus {
+    border-color: #a88bff;
+    box-shadow: 0 0 10px rgba(171, 140, 255, 0.4);
+}
+.floating-label label{
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    color: #8a6acb;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 
+        0.3s ease,
+        transform 0.3s ease;
+    opacity: 0.9;
+}
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+    top: 16px;
+    left: -50px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #4b2e83;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.floating-label input:focus + label::after,
+.floating-label input:not(:placeholder-shown) + label::after {
+    content: ":";
+}
+
+.floating-label input:focus, .floating-label input:not(:placeholder-shown) {
+    padding: 14px 12px;
+    width: calc(100% - 40px);
+    margin-left: 40px;
+}
