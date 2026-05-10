@@ -16,7 +16,7 @@ Students:
 Teachers:
 
 - [x] Create a class and be given a class code for students to use
-- [ ] Manage the class (remove students, etc)
+- [x] Manage the class (remove students, etc)
 - [ ] Oversee trades and collections
 - [x] Manage question list (add new questions, delete outdated ones, mark certain questions to be inactive/active)
 
