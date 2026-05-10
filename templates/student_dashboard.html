@@ -24,7 +24,7 @@
         <h3>Your Classes:</h3>
         {% set active_classes = current_user.class_enrollments|selectattr("status", "equalto", "active")|list%}
         {% if active_classes %}
-        <table align = "left" style="float: none;">
+        <table style="margin-left: 0; float: none; display: block;">
             <tr>
                 <td><strong>Class </strong></td>
                 <td><strong>Teacher</strong></td>
@@ -40,6 +40,9 @@
                         </td>
                         <td>
                             <a href="/student/class/{{ enrollment.class_ref.id }}"><button>View Class</button></a>
+                            <p><a href="/student/leave_class/{{ enrollment.class_ref.id }}" onclick="return confirm('Are you sure you want to leave this class?');">
+                                <button>Leave Class</button>
+                            </a></p>
                         </td>
                     </tr>
                     {% endfor %}
@@ -49,12 +52,17 @@
         {% endif %}
     </div>
 
-    <br><br>
     <form method="POST">
-        <input type = "text" name = "join_code" placeholder = "Class Join Code">
-        <button type="submit">Add New Class</button>
+        <div style="display: flex; align-items: center;">
+            <div class="floating-label left" style="display: inline-block;  margin-left: 50px;">
+                <div class="slide">
+                    <input type = "text" name = "join_code" placeholder = "">
+                    <label> Class Code </label>
+                </div>
+                <button type="submit" style = "margin-bottom: 20px;" class="side-btn">Add New Class </button>
+            </div>
+        </div>
     </form>
-    <br><br>
     </section>
     <form action="/logout" method="GET" style = "display: inline;">
         <button type="submit" class="logout-btn">Logout</button>
