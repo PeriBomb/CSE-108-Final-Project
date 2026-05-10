@@ -216,7 +216,7 @@ def student_study_answer():
 
     return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
 
-@app.route("/teacher/dashboard")
+@app.route("/teacher/dashboard", methods=["POST", "GET"])
 @login_required
 def teacher_dashboard():
     if current_user.role != "teacher":
@@ -232,8 +232,20 @@ def teacher_dashboard():
             "join_code": cls.join_code,
             "students": students
         })
+    if request.method == "POST":
+        class_name = request.form.get("class_name", "").strip()
+        if class_name:
+            new_class = Class(
+                name=class_name,
+                join_code=Class.generate_join_code(),
+                teacher_id=current_user.id
+            )
+            db.session.add(new_class)
+            db.session.commit()
+            flash("Class created!")
+            return redirect(url_for("teacher_dashboard"))
+    
     return render_template("teacher_dashboard.html", Classes=class_data)
-
 @app.route("/teacher/question/add", methods=["GET", "POST"])
 @login_required
 def teacher_add_question():
@@ -296,16 +308,29 @@ def teacher_delete_question(question_id):
     db.session.commit()
     flash("Question deleted.")
     return redirect(url_for("teacher_questions"))
-@app.route("/teacher/class/<string:join_code>")
+@app.route("/teacher/class/<string:join_code>", methods=["GET", "POST"])
 @login_required
 def teacher_class(join_code):
     if current_user.role != "teacher":
         return redirect(url_for("login"))
     cls = Class.query.filter_by(join_code=join_code).first_or_404()
-    students = [enrollment.student for enrollment in cls.enrollments if enrollment.status == "active"]
     if cls.teacher_id != current_user.id:
         flash("You do not have access to this class.")
         return redirect(url_for("teacher_dashboard"))
+    
+    if request.method == "POST" and request.form.get("_method") == "DELETE":
+        student_id = request.form.get("student_id", type=int)
+        if student_id:
+            enrollment = ClassEnrollment.query.filter_by(student_id=student_id, class_id=cls.id).first()
+            if enrollment:
+                db.session.delete(enrollment)
+                db.session.commit()
+                flash("Student removed from class.")
+            else:
+                flash("Student not found in this class.")
+        return redirect(url_for("teacher_class", join_code=join_code))
+    
+    # GET request: display the class
     return render_template("teacher_class.html", cls=cls)
 
 @app.route("/logout")

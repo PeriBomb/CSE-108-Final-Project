@@ -26,7 +26,10 @@
         <a href="/teacher/class/{{ item.join_code }}"><button>Manage Class</button></a> 
     </section>
     {% endfor %}
-
+    <form method="POST">
+        <input type = "text" name = "class_name" placeholder = "New Class Name" required>
+        <button type="submit">Add New Class</button>
+    </form>
     <br><br>
     <form action="/logout" method="GET" style = "display: inline;">
         <button type="submit" class="logout-btn">Logout</button>

@@ -13,10 +13,20 @@
     <h3>Student List</h3>
     {% if cls.students %}
     <table>
+        <tr>
+            <th><strong>Name</strong></th>
+            <th><strong>Username</strong></th>
+            <th><strong>Manage</strong></th>
         {% for student in cls.students %}
             <tr>
                 <td>{{ student.first_name }} {{ student.last_name }}</td>
                 <td>{{ student.username }}</td>
+                <td>
+                    <form action="/teacher/class/{{ cls.join_code }}" method="POST" style="display:inline">
+                        <input type="hidden" name="student_id" value="{{ student.id }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" onclick="return confirm('Are you sure you want to remove this student?')">Remove Student</button>
+                    </form>
             </tr>
         {% endfor %}
     </table>

@@ -37,6 +37,10 @@ class Class(db.Model):
     collectibles = db.relationship("Collectible",     backref="class_ref", lazy=True, cascade="all, delete-orphan")
     enrollments  = db.relationship("ClassEnrollment", backref="class_ref", lazy=True, cascade="all, delete-orphan")
  
+    @property
+    def students(self):
+        return [enrollment.student for enrollment in self.enrollments if enrollment.status == "active"]
+ 
     @staticmethod
     def generate_join_code():
         """Generate a unique 6-character alphanumeric join code."""
