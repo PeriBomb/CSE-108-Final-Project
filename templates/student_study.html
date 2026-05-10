@@ -8,7 +8,9 @@
 </head>
 <body>
     <h1>Study</h1>
-    <p>Points: {{ current_user.points }}</p>
+    <div class="points" style="padding-right: 5px;">
+        <h3>Points: {{ current_user.points }}</h3>
+    </div>
 
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
