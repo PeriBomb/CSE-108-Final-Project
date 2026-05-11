@@ -322,15 +322,16 @@ def student_study_answer():
     return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
 
 # Shows only the current student's collection
-@app.route("/student/collection")
+@app.route("/student/collection/<int:student_id>")
 @login_required
-def student_collection():
+def student_collection(student_id):
     if current_user.role != "student":
         return redirect(url_for("login"))
+    target_student = User.query.get_or_404(student_id)
     # create an array containing students collection to be passed into render_template
     # query student collectibles for collectibles with current student id
-    collection = StudentCollectible.query.filter_by(student_id=current_user.id).all()
-    return render_template("student_collection.html", collection=collection)
+    collection = StudentCollectible.query.filter_by(student_id=student_id).all()
+    return render_template("student_collection.html", collection=collection, student=target_student)
 
 # Teacher home page - manage their classes and students
 @app.route("/teacher/dashboard", methods=["POST", "GET"])

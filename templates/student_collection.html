@@ -12,17 +12,21 @@
     <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
     
     <div>
-        <h3>Your Trading Cards:</h3>
+        {% if student.id != current_user.id %}
+            <h3>{{ student.username }}'s Trading Cards:</h3>
+        {% else %}
+            <h3>Your Trading Cards:</h3>
+        {% endif %}
         <ul>
-            {% for instance in current_user.owned_collectibles %}
-                <li>
-                    <strong>{{ instance.collectible.name }}</strong> 
-                </li>
+            {% for instance in collection %}
+                <li><strong>{{ instance.collectible.name }}</strong></li>
             {% else %}
-                <p>Your collection is currently empty</p>
+                <p>This collection is currently empty</p>
             {% endfor %}
         </ul>
     </div>
+
+    
 
     <a href="/student/dashboard">Back to dashboard</a>
 </body>
