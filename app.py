@@ -1,4 +1,6 @@
 # Import libraries for Flask web framework, database management, user authentication, and admin tools
+from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
@@ -24,6 +26,10 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"  # Redirect to login page if user not authenticated
 
 # Load user from database when needed for login/session management
+@app.before_request
+def before_request():
+    db.session.execute(text("PRAGMA foreign_keys=ON"))
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -137,6 +143,11 @@ def register():
         elif role == "teacher":
             class_name = request.form.get("class_name", "").strip()
             if class_name:
+                existing = Class.query.filter_by(name=class_name).first()
+                if existing:
+                    flash("Class Already Exists", "error")
+                    db.session.rollback()
+                    return render_template("register.html")
                 new_class = Class(
                     name=class_name,
                     join_code=Class.generate_join_code(),  # Generate unique code for students to join
@@ -357,6 +368,11 @@ def teacher_dashboard():
         # Create a new class
         class_name = request.form.get("class_name", "").strip()
         if class_name:
+            existing = Class.query.filter_by(name=class_name).first()
+            if existing:
+                flash("Class Already Exists", "error")
+                db.session.rollback()
+                return render_template("teacher_dashboard.html")
             new_class = Class(
                 name=class_name,
                 join_code=Class.generate_join_code(),  # Generate unique join code

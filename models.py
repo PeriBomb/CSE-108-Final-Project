@@ -36,7 +36,7 @@ class Class(db.Model):
     __tablename__ = "classes"  # Database table name
  
     id          = db.Column(db.Integer, primary_key=True)  # Unique ID for each class
-    name        = db.Column(db.String(120), nullable=False)  # Class name (e.g., "Biology 101")
+    name        = db.Column(db.String(120), unique=True, nullable=False)  # Class name (e.g., "Biology 101")
     join_code   = db.Column(db.String(10), unique=True, nullable=False)  # Unique code students use to join
     teacher_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  # Which teacher owns this class
     
