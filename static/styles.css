@@ -191,9 +191,8 @@ input[type="radio"] {
         transform 0.3s ease;
     opacity: 0.9;
 }
-
-.floating-label input:focus + .slide label,
-.floating-label input:not(:placeholder-shown) + .slide label {
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
     top: 16px;
     left: -50px;
     font-size: 16px;
@@ -203,57 +202,80 @@ input[type="radio"] {
     transform: translateX(0);
 }
 
-.floating-label input:focus + .slide label::after,
+.floating-label input:focus + label::after,
 .floating-label input:not(:placeholder-shown) + label::after {
     content: ":";
 }
 
-.floating-label input:focus, .floating-label input:not(:placeholder-shown) {
+.floating-label:not(.left) input:focus, .floating-label:not(.left) input:not(:placeholder-shown) {
     padding: 14px 12px;
     width: calc(100% - 40px);
-    margin-left: 50px;
+    margin-left: 40px;
 }
-.floating-label.left{
-    display: flex;
+
+.floating-label.left {
+    display: inline-flex;
     align-items: center;
     gap: 10px;
-    max-width: 300px;
     position: relative;
+    margin-left: 16px;
 }
 
-.floating-label.left input{
-    margin-left: 50px;
-    width: calc(100% - 50px);
+.floating-label.left input {
+    width: 260px;
+    padding: 10px 12px;
+    border: 2px solid #d5c4ff;
+    border-radius: 10px;
+    background: #fff7ff;
+    color: #2e0854;
+    outline: none;
+    transition: transform 0.3s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    box-sizing: border-box;
 }
 
-.floating-label.left .slide {
-    width: 100%;
-    position: relative;
-    transition: transform 0.3s ease;
+.floating-label.left input:focus {
+    border-color: #a88bff;
+    box-shadow: 0 0 10px rgba(171, 140, 255, 0.4);
 }
-.floating-label.left .slide input:focus ~ label, .floating-label.left .slide input:not(:placeholder-shown) ~ label {
-    top: 16px;
-    left: -50px;
+
+.floating-label.left label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    color: #8a6acb;
+    pointer-events: none;
+    transition: color 0.3s ease;
+    white-space: nowrap;
     font-size: 16px;
-    font-weight: 700;
-    color: #4b2e83;
-    opacity: 1;
+    font-weight: 400;
 }
-.floating-label.left .slide input:focus + label::after, .floating-label.left .slide input:not(:placeholder-shown) + label::after {
+
+.floating-label.left input:focus + label,
+.floating-label.left input:not(:placeholder-shown) + label {
+    left: 0;
+    transform: translate(0, -50%);
+    color: #4b2e83;
+}
+
+.floating-label.left input:focus + label::after,
+.floating-label.left input:not(:placeholder-shown) + label::after {
     content: ":";
 }
-/*animation*/
-.floating-label.left .slide input:focus ~ *, .floating-label.left .slide input:not(:placeholder-shown) ~ * {
-    transform: translateX(50px);
+
+.floating-label.left .slide,
+.floating-label.left input {
+    transition: transform 0.3s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.floating-label.left .side-btn {
-    margin-left: 10px;
-    transition: transform 0.3s ease;
+.floating-label.left:focus-within input,
+.floating-label.left:focus-within .slide {
+    transform: translateX(40px);
 }
 
-.floating-label.left .slide input:focus ~ .side-btn, .floating-label.left .slide input:not(:placeholder-shown) ~ .side-btn{
-    transform: translateX(50px);
+.floating-label input, .floating-select select {
+    box-sizing: border-box;
+
 }
 
 .floating-select {
