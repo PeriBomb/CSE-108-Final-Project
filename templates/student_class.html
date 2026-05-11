@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8">
+    <title>Student Class</title>
+</head>
+<body>
+    <h1>{{ cls.name }}</h1>
+    <p><strong>Join Code:</strong> {{ cls.join_code }}</p>
+    <p><strong>Students:</strong> {{ cls.students|length }}</p>
+    <h3>Student List</h3>
+    {% if cls.students %}
+    <table>
+        <tr>
+            <th><strong>Name</strong></th>
+            <th><strong>Username</strong></th>
+            <!-- note: make sure not to be able to send trade request to yourself
+            implementations could be viewing student profile, 
+             or not including trade request button for current user -->
+        {% for student in cls.students %}
+            <tr>
+                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                <td>{{ student.username }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No students have joined this class yet.</p>
+    {% endif %}
+    <br>
+    <a href="/student/dashboard">Back to dashboard</a>    
+</body>
+</html>
