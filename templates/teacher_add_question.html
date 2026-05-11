@@ -8,6 +8,7 @@
     <title>New Question</title>
 </head>
 <body>
+<section style = "width: 400px; margin: 0 auto;">
     <h1>Create New Question</h1>
 
     {% with messages = get_flashed_messages() %}
@@ -16,47 +17,56 @@
         {% endfor %}
     {% endwith %}
 
-    <form method="POST">
-        <label>Class</label><br>
+    <form method="POST" style="margin-left: 50px;">
         <select name="class_id" required>
-            <option value="">Select a class</option>
+            <option value="" disabled selected>Select a class</option>
             {% for cls in classes %}
                 <option value="{{ cls.id }}" {% if selected_class_id and cls.id == selected_class_id %}selected{% endif %}>
                     {{ cls.name }} ({{ cls.join_code }})
                 </option>
             {% endfor %}
         </select><br><br>
-
-        <label>Question</label><br>
-        <textarea name="text" rows="3" cols="50"></textarea><br><br>
-
-        <label>Option A</label><br>
-        <input type="text" name="option_a"><br><br>
-
-        <label>Option B</label><br>
-        <input type="text" name="option_b"><br><br>
-
+    <div class="floating-label top" >
+        <textarea name="text" rows="3" cols="50" placeholder=" "></textarea>
+        <label>Question</label>
+    </div>
+    <div class="floating-label top">
+        <input type="text" name="option_a" placeholder=" ">
+        <label>Option A</label>
+    </div>
+    <div class="floating-label top">
+        <input type="text" name="option_b" placeholder=" ">
+        <label>Option B</label>
+    </div>
+    <div class="floating-label top">
+        <input type="text" name="option_c" placeholder=" ">
         <label>Option C</label><br>
-        <input type="text" name="option_c"><br><br>
-
+    </div>
+    <div class="floating-label top">
+        <input type="text" name="option_d" placeholder=" ">
         <label>Option D</label><br>
-        <input type="text" name="option_d"><br><br>
+    </div>
 
-        <label>Correct Option</label><br>
-        <select name="correct_option">
+    <div class="floating-select top" style = "margin-left: 0%;">
+        <select name="correct_option" required>
+            <option value="" disabled selected>Correct Option</option>
             <option value="a">A</option>
             <option value="b">B</option>
             <option value="c">C</option>
             <option value="d">D</option>
-        </select><br><br>
-
-        <label>Point Value</label><br>
-        <input type="number" name="point_value" value="10"><br><br>
-
+        </select>
+        <label>Correct Option</label> <br><br>
+    </div>
+    <div class="floating-label top" style="text-align: left;">
+            <input type="number" name="point_value" placeholder=" " required>
+            <label>Point Value</label>
+    </div>
         <button type="submit">Save Question</button>
     </form>
-
-    <br>
-    <a href="/teacher/dashboard">Back to dashboard</a>
+</section>
+    <div style="width:400px; margin: 0 auto;">
+        <br>
+        <a href="/teacher/dashboard">Back to dashboard</a>
+    </div>
 </body>
 </html>

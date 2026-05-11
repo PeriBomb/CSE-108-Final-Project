@@ -15,38 +15,49 @@
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
+<section style = "width: 400px; margin: 0 auto;"
+    <form method="POST" style="margin-left: 50px;">
+        <div class = "floating-label top">
+            <textarea name="text" rows="3" cols="50" placeholder=" ">{{ question.text }}</textarea>
+            <label>Question</label>
+        </div>
+        <div class="floating-label top">
+            <input type="text" name="option_a" value="{{ question.option_a }}" placeholder=" ">
+            <label>Option A</label>
+        </div>
+        <div class="floating-label top">
+            <input type="text" name="option_b" value="{{ question.option_b }}" placeholder=" ">
+            <label>Option B</label>
+        </div>
+        <div class="floating-label top">  
+            <input type="text" name="option_c" value="{{ question.option_c }}" placeholder=" ">
+            <label>Option C</label>
+        </div>
+        <div class="floating-label top">
+            <input type="text" name="option_d" value="{{ question.option_d }}" placeholder=" ">
+            <label>Option D</label>
+        </div>
+        <div class="floating-select top" style="margin-left: 0%;">
+            <select name="correct_option" required>
+                <option value ="" disabled>Correct Option</option>
+                <option value="a" {% if question.correct_option == 'a' %}selected{% endif %}>A</option>
+                <option value="b" {% if question.correct_option == 'b' %}selected{% endif %}>B</option>
+                <option value="c" {% if question.correct_option == 'c' %}selected{% endif %}>C</option>
+                <option value="d" {% if question.correct_option == 'd' %}selected{% endif %}>D</option>
+            </select>
+            <label>Correct Option</label><br><br>
+        </div> 
 
-    <form method="POST">
-        <label>Question</label><br>
-        <textarea name="text" rows="3" cols="50">{{ question.text }}</textarea><br><br>
-
-        <label>Option A</label><br>
-        <input type="text" name="option_a" value="{{ question.option_a }}"><br><br>
-
-        <label>Option B</label><br>
-        <input type="text" name="option_b" value="{{ question.option_b }}"><br><br>
-
-        <label>Option C</label><br>
-        <input type="text" name="option_c" value="{{ question.option_c }}"><br><br>
-
-        <label>Option D</label><br>
-        <input type="text" name="option_d" value="{{ question.option_d }}"><br><br>
-
-        <label>Correct Option</label><br>
-        <select name="correct_option">
-            <option value="a" {% if question.correct_option == 'a' %}selected{% endif %}>A</option>
-            <option value="b" {% if question.correct_option == 'b' %}selected{% endif %}>B</option>
-            <option value="c" {% if question.correct_option == 'c' %}selected{% endif %}>C</option>
-            <option value="d" {% if question.correct_option == 'd' %}selected{% endif %}>D</option>
-        </select><br><br>
-
-        <label>Point Value</label><br>
-        <input type="number" name="point_value" value="{{ question.point_value }}"><br><br>
-
+        <div class = "floating-label top" style = "text-align: left;">
+            <input type="number" name="point_value" value="{{ question.point_value }}" placeholder=" " required>
+            <label>Point Value</label>
+        </div>
         <button type="submit">Update Question</button>
     </form>
-
-    <br>
-    <a href="/teacher/questions">Back to questions</a>
+</section>
+    <div style = "width: 400; margin: 0 auto;">
+        <br>
+        <a href="/teacher/questions">Back to questions</a>
+    </div>
 </body>
 </html>

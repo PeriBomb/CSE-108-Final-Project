@@ -15,9 +15,9 @@
             <p>{{ message }}</p>
         {% endfor %}
     {% endwith %}
-
+<section>
     {% if questions %}
-        <table border="1" cellpadding="8">
+        <table border="1" cellpadding="8" style="margin-left: 0;" >
             <tr>
                 <th>Question</th>
                 <th>Points</th>
@@ -34,7 +34,7 @@
                         <button type="submit">{{ "Deactivate" if q.is_active else "Activate" }}</button>
                     </form>
                     <a href="/teacher/question/{{ q.id }}/edit" style="display:inline"><button>Edit</button></a>
-                    <form method="POST" action="/teacher/question/{{ q.id }}/delete" style="display:inline">
+                    <form method="POST" action="/teacher/question/{{ q.id }}/delete" style="display:inline;">
                         <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                     </form>
                 </td>
@@ -48,6 +48,8 @@
     <br>
     <a href="/teacher/question/add{% if current_class %}/{{ current_class.join_code }}{% endif %}"><button>Add New Question</button></a>
     <br><br>
+    </body>
+</section>
     <a href="/teacher/dashboard">Back to dashboard</a>
 </body>
 </html>

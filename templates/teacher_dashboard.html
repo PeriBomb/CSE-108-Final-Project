@@ -34,8 +34,15 @@
     </section>
     {% endfor %}
     <form method="POST">
-        <input type = "text" name = "class_name" placeholder = "New Class Name">
-        <button type="submit">Add New Class</button>
+        <div style="display: flex; align-items: center;">
+            <div class="floating-label left">
+                <input type="text" name="class_name" placeholder=" ">
+                <label>Class Name</label>
+                <div class="slide">
+                    <button type="submit" class="side-btn">Add New Class</button>
+                </div>
+            </div>
+        </div>
     </form>
     <br><br>
     <form action="/logout" method="GET" style = "display: inline;">
