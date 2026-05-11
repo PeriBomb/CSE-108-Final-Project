@@ -39,7 +39,10 @@
                             {{ enrollment.class_ref.teacher.first_name }} {{ enrollment.class_ref.teacher.last_name }}
                         </td>
                         <td>
-                            <a href="/student/class/{{ enrollment.class_ref.id }}"><button>View Class</button></a>
+                            <form action="{{ url_for('student_view_class', class_id=enrollment.class_ref.id) }}" 
+                            style="display: inline;">
+                                <button type="submit">View Class</button>
+                            </form>
                             <form action="{{ url_for('student_leave_class', enrollment_id=enrollment.id) }}" 
                             method="POST" 
                             style="display: inline;">

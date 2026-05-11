@@ -197,6 +197,15 @@ def student_leave_class(enrollment_id):
         print(f"Error: {e}")
     return redirect("/student/dashboard")
 
+# redirect to the respective class
+@app.route("/student/class/<int:class_id>")
+@login_required
+def student_view_class(class_id):
+    if current_user.role != "student":
+        return redirect(url_for("login"))
+    
+    cls = Class.query.filter_by(id=class_id).first_or_404()
+    return render_template("student_class.html", cls=cls)
 
 # Process student purchasing collectible card from shop - costs 50 points
 @app.route("/student/shop/buy", methods=["POST"])
@@ -505,7 +514,7 @@ def teacher_edit_question(question_id):
         db.session.commit()  # Save changes
         flash("Question updated!")
         return redirect(url_for("teacher_questions"))
-
+    
     # Show edit form
     return render_template("teacher_edit_question.html", question=q)
 # Logout - ends user session
