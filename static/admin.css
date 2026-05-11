@@ -1,0 +1,161 @@
+html,body{
+    height: 100%;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #f0c6ffbb, #bd8ff2d4);
+    color: #2e0854;
+    background-attachment: fixed;
+}
+
+.wrapper, .content, .container-fluid {
+    background: transparent !important;
+}
+
+.navbar {
+    background: #c7a3ff !important;
+    border-bottom: 2px solid #b48cff !important;
+    box-shadow: 0 4px 10px rgba(75, 46, 131, 0.25);
+    border-radius: 10px;
+}
+
+.navbar .navbar-brand, .navbar .nav-link, .navbar .navbar-text{
+    color: #4b2e83 !important;
+    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.navbar .nav-link:hover {
+    color: #6a42c2 !important;
+}
+
+.navbar .dropdown-menu {
+    background: #d6b3ff !important;
+    border: 1px solid #c7a3ff !important;
+    box-shadow: 0 4px 8px rgba(75, 46, 131, 0.15);
+}
+
+.navbar .dropdown-item {
+    color: #4b2e83 !important;
+    font-weight: 600;
+}
+
+.navbar .dropdown-item:hover {
+    background: #e8cfff !important;
+    color: #4b2e83 !important;
+}
+
+.nav-tabs {
+    margin-bottom: 20px !important;
+}
+
+.btn, .btn-group {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+.nav-tabs .nav-link.active {
+    background: #e8cfff !important;
+    color: #4b2e83 !important;
+    border-color: #c7a3ff #c7a3ff #e8cfff !important;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link {
+    color: #4b2e83 !important;
+}
+
+.nav-tabs .nav-link:hover{
+    background: #f3ddff;
+}
+
+.table {
+    background: #ffeaff !important;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(75, 46, 131, 0.25);
+}
+
+.table thead th {
+    background: #d6b3ff !important;
+    color: #4b2e83 !important;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    border-bottom: 2px solid #c7a3ff;
+}
+
+.table thead th a {
+    color: #4b2e83 !important;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.table thead th a:hover {
+    color: #6a42c2 !important;
+    text-decoration: underline;
+}
+.table thead th .fa {
+    color: #4b2e83 !important;
+    opacity: 0.7;
+}
+
+.table thead th .fa:hover {
+    opacity: 1;
+}
+
+.table tbody tr:hover{
+    background: #f7e6ff !important;
+}
+
+.form-control {
+    border-radius: 10px !important;
+    border: 2px solid #d5c4ff !important;
+    background: #fff7ff !important;
+    color: #2e0854 !important;
+    transition: 0.25s;
+}
+
+.form-control:focus{
+    border-color: #a88bff !important;
+    box-shadow: 0 0 10px rgba(171, 140, 255, 0.4) !important;
+}
+
+.btn-primary{
+    background: #4b2e83 !important;
+    border-color: #4b2e83 !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 3px 6px rgba(75, 46, 131, 0.25);
+    transition: 0.25 ease;
+}
+
+.btn-primary:hover{
+    background: #6a42c2 !important;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 12px rgba(75, 46, 131, 0.3);
+}
+
+.btn-danger {
+    background: #b417d3 !important;
+    border-color: #b417d3 !important;
+    border-radius: 12px !important;
+}
+
+.btn-danger:hover{
+    background: #d93df5 !important;
+}
+
+.card {
+    border-radius: 14px !important;
+    background: #d6b3ff !important;
+    border: none !important;
+    box-shadow: 0 4px 8px rgba(75, 46, 131, 0.15);
+}
+
+.card-header {
+    background: #c7a3ff !important;
+    color: #4b2e83 !important;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    border-radius: 14px 14px 0 0 !important;
+}

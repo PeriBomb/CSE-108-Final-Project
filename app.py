@@ -2,7 +2,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
-from flask_admin import Admin
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_socketio import SocketIO
 from wtforms import PasswordField
@@ -28,6 +28,11 @@ login_manager.login_view = "login"  # Redirect to login page if user not authent
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+class AdminView(AdminIndexView):
+    pass
+    
+
+
 # Admin panel configuration - controls what admin can see and edit for users
 class UserAdminView(ModelView):
     column_exclude_list = ["password"]  # Hide password column in list view
@@ -48,9 +53,9 @@ class UserAdminView(ModelView):
         return redirect(url_for("login"))
 
 
-
 # Create admin interface at /admin for managing all data in the system
-admin = Admin(app, name="ClassPack Admin View")
+admin = Admin(app, name="ClassPack Admin View", index_view=AdminView())
+
 admin.add_view(UserAdminView(User, db.session))  # Admin can manage users
 admin.add_view(ModelView(Class, db.session))  # Admin can manage classes
 admin.add_view(ModelView(ClassEnrollment, db.session))  # Admin can manage student enrollments
