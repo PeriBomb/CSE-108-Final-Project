@@ -505,7 +505,7 @@ def teacher_edit_question(question_id):
         db.session.commit()  # Save changes
         flash("Question updated!")
         return redirect(url_for("teacher_questions"))
-    
+
     # Show edit form
     return render_template("teacher_edit_question.html", question=q)
 # Logout - ends user session
