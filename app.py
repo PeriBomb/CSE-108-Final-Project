@@ -715,13 +715,13 @@ with app.app_context():
     db.create_all()
     if not User.query.filter_by(username="admin").first():
         admin = User(
-            username="admin33",
+            username="admin",
             email="adminmail@gmail.com",
             first_name="Admin",
             last_name="Person",
             role="admin"
         )
-        admin.set_password("Classword")
+        admin.set_password("password")
         db.session.add(admin)
         db.session.commit()
         print("Admin created!")
