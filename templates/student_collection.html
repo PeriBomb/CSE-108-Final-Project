@@ -17,13 +17,35 @@
         {% else %}
             <h3>Your Trading Cards:</h3>
         {% endif %}
-        <ul>
+
+        {% if collection %}
+        <table style="margin-left: 0; float: none; display: block;">
+            <tr>
+                <td><strong>Name</strong></td>
+                <td><strong>Emoji</strong></td>
+                <td><strong>Rarity</strong></td>
+                <td><strong>Class</strong></td>
+            </tr>
             {% for instance in collection %}
-                <li><strong>{{ instance.collectible.name }}</strong></li>
-            {% else %}
-                <p>This collection is currently empty</p>
+                <tr>
+                    <td>
+                        <strong>{{ instance.collectible.name }}</strong>
+                    </td>
+                    <td>
+                        <strong>{{ instance.collectible.emoji }}</strong>
+                    </td>
+                    <td>
+                        <strong>{{ instance.collectible.rarity }}</strong>
+                    </td>
+                    <td>
+                        <strong>{{ instance.collectible.class_ref.name }}</strong>
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
+        {% else %}
+            <p>This collection is currently empty</p>
+        {% endif %}
     </div>
 
     
