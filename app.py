@@ -6,21 +6,30 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, join_room, emit, leave_room
+from flask import jsonify
 from wtforms import PasswordField
 from extensions import db
 from models import User, Class, ClassEnrollment, Question, Collectible, StudentCollectible, TradeRequest, RARITY_LEVELS, RARITY_WEIGHTS
 import random
+import os
+from werkzeug.utils import secure_filename
 
 # Create Flask app and configure database settings
 app = Flask(__name__)
+UPLOAD_FOLDER = "static/uploads/collectibles"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"  # Use SQLite database file
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = "dev-secret-key"  # Secret key for sessions
+app.config["SECRET_KEY"] = "dev-secret-key"  # Secret key for sessions\
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok =True)
 socketio = SocketIO(app)  # Initialize SocketIO for real-time features (not used yet)
 # Initialize the database with the app
-db.init_app(app)
 
+db.init_app(app)
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 # Set up user login system - manages user sessions and authentication
 login_manager = LoginManager(app)
 login_manager.login_view = "login"  # Redirect to login page if user not authenticated
@@ -36,8 +45,6 @@ def load_user(user_id):
 
 class AdminView(AdminIndexView):
     pass
-    
-
 
 # Admin panel configuration - controls what admin can see and edit for users
 class UserAdminView(ModelView):
@@ -165,6 +172,12 @@ def register():
 
     return render_template("register.html")
 
+@socketio.on("join_class")
+def join_class(data):
+    class_id = data.get("join_code")
+    room = f"class_{join_code}"
+    join_room(room)
+
 # Student home page - shows their classes and allows joining new classes
 @app.route("/student/dashboard", methods=["POST", "GET"])
 @login_required  # Must be logged in to access
@@ -193,7 +206,66 @@ def student_dashboard():
         flash(f"Joined class: {cls.name}")
         return redirect("/student/dashboard")
     
-    return render_template("student_dashboard.html")
+    return render_template("student_dashboard.html", classes=current_user.class_enrollments)
+
+@app.route("/class/chat/<join_code>")
+@login_required
+def class_chat(join_code):
+    cls = Class.query.filter_by(join_code=join_code).first_or_404()
+    return render_template("class_chat.html", cls=cls, join_code=join_code)
+
+@socketio.on("join_class")
+def join_class(data):
+    join_code = data.get("join_code")
+    room = f"class_{join_code}"
+    join_room(room)
+@socketio.on("send_message")
+def handle_send_message(data):
+    join_code = data.get("join_code")
+    username = data.get("username")
+    message = data.get("message")
+
+    room = f"class_{join_code}"
+
+    emit("chat_message", {
+        "username": username,
+        "message":message
+        }, room = room)
+    
+def push_trade_update(join_code, sender_name, reciever_name, item_name):
+    room = f"class_{join_code}"
+
+    socketio.emit(
+        "trade_update",
+        {"message": f" Trade completed: {sender_name} traded '{item_name}' to '{reciever_name}'"},
+        room=room
+    )
+def send_trade_update(join_code, text):
+    room = f"class_{join_code}"
+    socketio.emit("trade_update", {"message": text}, room=room)
+
+
+@app.route("/trade/complete/<int:trade_id>", methods=["POST"])
+@login_required
+def complete_trade(trade_id):
+    trade = TradeRequest.query.get_or_404(trade_id)
+
+    item = Collectible.query.get(trade.item_id)
+    sender = User.query.get(trade.sender_id)
+    reciever = User.query.get(trade.reciever_id)
+
+    item.owner_id = reciever.id
+    db.session.commit()
+
+    push_trade_update(
+        join_code=trade.class_id,
+        sender_name=sender.username,
+        reciever_name=reciever.username,
+        item_name=item.name
+    
+    )
+
+    return jsonify({"status" : "success", "message" : "Trade completed"})
 
 @app.route("/student/leave_class/<int:enrollment_id>", methods=["POST"])
 @login_required
@@ -538,14 +610,42 @@ def teacher_edit_question(question_id):
     
     # Show edit form
     return render_template("teacher_edit_question.html", question=q)
+
+@app.route("/upload", methods = ["GET", "POST"])
+def upload_collectible():
+    if request.method == "POST":
+        file = request.files.get("file")
+        name = request.form.get("name")
+        description = request.form.get("description")
+        rarity = request.form.get("rarity")
+        class_id = request.form.get("class_id")
+        if not file or file.filename == "":
+            flash("No file selected.", "error")
+            return redirect(request.url)
+        if not allowed_file(file.filename):
+            flash("Invalid file type. Please choose a PNG, JPG, or GIF", "error")
+            return redirect(request.url)
+        filename = secure(file.filename)
+        save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(save_path)
+        collectible = Collectible(
+            name=name,
+            description=description,
+            rarity=rarity,
+            class_id=class_id,
+            image_path=save_path
+        )
+        db.session.add(collectible)
+        db.session.commit()
+
+        flash("Collectible uploaded!", "succes")
+        return redirect(url_for(teacher_dashboard))
+    return render_template("upload_collectible.html")
 # Logout - ends user session
 @app.route("/logout")
 def logout():
     logout_user()  # Clear login session
     return redirect(url_for("login"))
-@socketio.on("message")
-def handle_message(data):
-    print(f"Received message: {data}")
 
 # Initialize database tables on startup
 with app.app_context():
