@@ -37,8 +37,6 @@ def load_user(user_id):
 class AdminView(AdminIndexView):
     pass
     
-
-
 # Admin panel configuration - controls what admin can see and edit for users
 class UserAdminView(ModelView):
     column_exclude_list = ["password"]  # Hide password column in list view
@@ -243,15 +241,25 @@ def student_buy_card():
         return redirect(url_for("student_shop"))
 
     # Make sure student is enrolled in at least one class
-    enrollment = ClassEnrollment.query.filter_by(
+    enrollments = ClassEnrollment.query.filter_by(
         student_id=current_user.id, status="active"
-    ).first()
-    if not enrollment:
+    ).all()
+    if not enrollments:
         flash("You are not enrolled in a class.")
         return redirect(url_for("student_shop"))
+    
+    valid_classes = [e.class_ref for e in enrollments if len(e.class_ref.collectibles) > 0]
+
+    # 3. Check if we found ANY classes with cards
+    if not valid_classes:
+        flash("None of your enrolled classes have collectibles available yet.")
+        return redirect(url_for("student_shop"))
+    
+    # pick a random class
+    random_class = random.choice(valid_classes)
 
     # Get all collectible cards available in their class
-    pool = Collectible.query.filter_by(class_id=enrollment.class_id).all()
+    pool = random_class.collectibles
     if not pool:
         flash("No collectibles available yet.")
         return redirect(url_for("student_shop"))
@@ -270,7 +278,7 @@ def student_buy_card():
     db.session.add(sc)
     db.session.commit()
 
-    flash(f"You got: {chosen.emoji} {chosen.name} ({chosen.rarity})")
+    flash(f"You got: {chosen.emoji} {chosen.name} ({chosen.rarity}) from {random_class.name}")
     return redirect(url_for("student_shop"))
 
 

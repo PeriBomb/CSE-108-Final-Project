@@ -18,8 +18,10 @@
     <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
     <a href="/student/shop"><button>Shop</button></a>
     <a href="/student/study"><button>Study</button></a>
-    <a href="/student/collection"><button>View Collection</button></a>
-
+    <form action="{{ url_for('student_collection', student_id=current_user.id) }}" 
+    style="display: inline;">
+        <button type="submit">View Collection</button>
+    </form>
     <div>
         <h3>Your Classes:</h3>
         {% set active_classes = current_user.class_enrollments|selectattr("status", "equalto", "active")|list%}
