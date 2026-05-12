@@ -7,8 +7,8 @@ Educational platform: Teachers can create a class and be given a unique class co
 Students:
 
 - [x] Create an account with a teacher's provided code
-- [ ] View their current collection
-- [ ] View other students' collections
+- [x] View their current collection
+- [x] View other students' collections
 - [x] Visit a shop to exchange for cards
 - [ ] Send/view(/counter?) trade requests
 - [x] Flip through random questions (endless supply) from the teacher's currently selected question list.
