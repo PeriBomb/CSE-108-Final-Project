@@ -28,18 +28,10 @@
             </tr>
             {% for instance in collection %}
                 <tr>
-                    <td>
-                        <strong>{{ instance.collectible.name }}</strong>
-                    </td>
-                    <td>
-                        <strong>{{ instance.collectible.emoji }}</strong>
-                    </td>
-                    <td>
-                        <strong>{{ instance.collectible.rarity }}</strong>
-                    </td>
-                    <td>
-                        <strong>{{ instance.collectible.class_ref.name }}</strong>
-                    </td>
+                    <td><strong>{{ instance.collectible.name }}</strong></td>
+                    <td><strong>{{ instance.collectible.emoji }}</strong></td>
+                    <td><strong>{{ instance.collectible.rarity }}</strong></td>
+                    <td><strong>{{ instance.collectible.class_ref.name }}</strong></td>
                 </tr>
             {% endfor %}
         </table>
