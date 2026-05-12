@@ -610,7 +610,19 @@ def handle_message(data):
 
 # Initialize database tables on startup
 with app.app_context():
-    db.create_all()  # Create all database tables if they don't exist
+    db.create_all()
+    if not User.query.filter_by(username="admin").first():
+        admin = User(
+            username="admin33",
+            email="adminmail@gmail.com",
+            first_name="Admin",
+            last_name="Person",
+            role="admin"
+        )
+        admin.set_password("Classword")
+        db.session.add(admin)
+        db.session.commit()
+        print("Admin created!")
 
 # Run the Flask server
 if __name__ == "__main__":
