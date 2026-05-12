@@ -278,9 +278,13 @@ def student_buy_card():
     db.session.add(sc)
     db.session.commit()
 
-    flash(f"You got: {chosen.emoji} {chosen.name} ({chosen.rarity}) from {random_class.name}")
-    return redirect(url_for("student_shop"))
+    return redirect(url_for("student_card_reveal", collectible_id=chosen.id))
 
+@app.route("/student/card/reveal/<int:collectible_id>")
+@login_required
+def student_card_reveal(collectible_id):
+    collectible = Collectible.query.get_or_404(collectible_id)
+    return render_template("card_reveal.html", collectible=collectible)
 
 # Shop page - students can spend points to buy collectible cards
 @app.route("/student/shop")

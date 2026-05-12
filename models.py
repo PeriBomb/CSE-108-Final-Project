@@ -124,8 +124,10 @@ class Collectible(db.Model):
     name        = db.Column(db.String(120), nullable=False)  # Name of the collectible
     description = db.Column(db.String(300), nullable=True)  # Description of the collectible
     rarity      = db.Column(db.String(20), nullable=False, default="common")  # How rare it is
-    emoji       = db.Column(db.String(10), nullable=False, default="🦂")  # Icon/emoji to display
-    # image_path = db.Column(db.String(255), nullable=True)
+    emoji       = db.Column(db.String(10), nullable=True, default="🦂")  # Icon/emoji to display
+    image_path = db.Column(db.String(255), nullable=True)
+    is_base        = db.Column(db.Boolean, nullable=False, default=False)  # True for the custom art set
+
     
     # Display collectible type instead of raw object
     def __repr__(self):
