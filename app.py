@@ -260,9 +260,6 @@ def student_buy_card():
 
     # Get all collectible cards available in their class
     pool = random_class.collectibles
-    if not pool:
-        flash("No collectibles available yet.")
-        return redirect(url_for("student_shop"))
 
     # Calculate odds for each card based on rarity (rarer cards less likely)
     weights = []
@@ -301,21 +298,26 @@ def student_study():
     if current_user.role != "student":
         return redirect(url_for("login"))
 
-    # Get student's enrolled class
-    enrollment = ClassEnrollment.query.filter_by(
+    # Make sure student is enrolled in at least one class
+    enrollments = ClassEnrollment.query.filter_by(
         student_id=current_user.id, status="active"
-    ).first()
-    if not enrollment:
+    ).all()
+    if not enrollments:
         flash("You are not enrolled in a class.")
         return redirect(url_for("student_dashboard"))
+    
+    valid_classes = [e.class_ref for e in enrollments if len(e.class_ref.questions) > 0]
 
-    # Get all active questions for their class
-    questions = Question.query.filter_by(
-        class_id=enrollment.class_id, is_active=True
-    ).all()
-    if not questions:
+    # 3. Check if we found ANY classes with cards
+    if not valid_classes:
         flash("No questions available yet.")
         return redirect(url_for("student_dashboard"))
+    
+    # pick a random class
+    random_class = random.choice(valid_classes)
+
+    # Get all active questions for their class
+    questions = random_class.questions
 
     # Pick a random question
     question = random.choice(questions)
