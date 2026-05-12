@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8"><title></title></head>
+<body style="text-align: center; padding: 50px;">
+    <h1>You got a new card!</h1>
+
+    <div style="
+        display: inline-block;
+        width: 160px;
+        height: 240px;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 30px auto;
+        {% if collectible.rarity == 'common' %}
+            border: 3px solid gray;
+            background: #f9f9f9;
+        {% elif collectible.rarity == 'rare' %}
+            border: 3px solid royalblue;
+            background: #f0f4ff;
+        {% elif collectible.rarity == 'legendary' %}
+            border: 3px solid gold;
+            background: #fffbea;
+        {% endif %}
+    ">
+        <div style="font-size: 80px; margin: 20px 0;">{{ collectible.emoji }}</div>
+        <div style="font-weight: bold; font-size: 1.1rem;">{{ collectible.name }}</div>
+        <div style="font-size: 0.85rem; color: gray; margin-top: 8px;">{{ collectible.rarity }}</div>
+        {% if collectible.description %}
+            <div style="font-size: 0.8rem; margin-top: 10px; font-style: italic;">{{ collectible.description }}</div>
+        {% endif %}
+    </div>
+
+    <br>
+    <a href="/student/shop"><button>Buy Another</button></a>
+    <a href="/student/dashboard"><button>Dashboard</button></a>
+</body>
+</html>
