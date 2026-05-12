@@ -50,6 +50,11 @@
                             style="display: inline;">
                                 <button type="submit">Leave Class</button>
                             </form>
+                            {%if enrollment.status == 'active' %}
+                                <form action="{{ url_for('class_chat', join_code=enrollment.class_ref.join_code) }}" method="GET">
+                                    <button class="enter-chat-btn">Enter Chat Room</button>
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

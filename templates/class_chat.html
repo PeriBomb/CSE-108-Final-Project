@@ -1,0 +1,53 @@
+{% block content %}
+<link rel="stylesheet" href="/static/styles.css">
+<div class="chat-container">
+    <h2 class="chat-title">Class Chat - {{cls.name}}</h2>
+    <div id="chat-messages" class="chat-box"></div>
+    <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+        <button type="submit"> Send</button>
+    </form>
+</div>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+</script>
+{% if cls %}
+<script>
+    window.JOIN_CODE = "{{ cls.join_code }}";
+    window.USERNAME = "{{current_user.username}}";
+</script>
+<script src = "{{url_for('static', filename='js/chat.js')}}"></script>
+{% endif %}
+<script>
+    socket.emit("join_class", {join_code: window.JOIN_CODE});
+
+    document.getElementById("chat-form").addEventListener("submit", e => {
+        e.preventDefault();
+
+    const input = document.getElementById("chat-input");
+    const message = input.value.trim();
+    if (!message) return;
+
+    socket.emit("send_message", {
+        join_code: window.JOIN_CODE,
+        username: window.USERNAME,
+        message: message
+    });
+
+    input.value = " ";
+
+    });
+
+</script>
+<div id="trade-popup" class="trade-popup hidden">
+    <div class= "trade-popup-content">
+        <h3>Trade Request</h3>
+        <div id="trade-popup-details">
+            <div class="trade-popup-buttons">
+                <button id="trade-confirm" class="trade-btn confirm"> Confirm</button>
+                <button id="trade-counter" class="trade-btn counter"> Counter</button>
+                <button id="trade-decline" class="trade-btn decline"> Decline</decline>
+        </div>
+    </div>
+</div>
+{% endblock %}
