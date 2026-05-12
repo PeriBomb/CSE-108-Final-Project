@@ -25,6 +25,7 @@
         <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <a href="/teacher/questions/{{ item.join_code }}"><button type="button">View Questions</button></a>
             <a href="/teacher/class/{{ item.join_code }}" style="display:inline-block;"><button type="button">Manage Class</button></a>
+            <a href="/teacher/collectible/new/{{ item.join_code }}"><button type="button">Add Card</button></a>
             <form action="/teacher/dashboard" method="POST" style="display:inline-block; margin:0;">
                 <input type="hidden" name="join_code" value="{{ item.join_code }}">
                 <input type="hidden" name="_method" value="DELETE">

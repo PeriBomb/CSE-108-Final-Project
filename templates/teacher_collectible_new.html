@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta charset="UTF-8"><title></title></head>
+<body>
+    <h1>Add New Card</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Card Name</label><br>
+        <input type="text" name="name" required><br><br>
+
+        <label>Description (optional)</label><br>
+        <input type="text" name="description"><br><br>
+
+        <label>Rarity</label><br>
+        <select name="rarity">
+            <option value="common">Common</option>
+            <option value="rare">Rare</option>
+            <option value="legendary">Legendary</option>
+        </select><br><br>
+
+        <label>Emoji</label><br>
+        <input type="text" name="emoji" maxlength="5" placeholder="e.g. 🦆"><br>
+        <small>Use your OS emoji picker: Windows = Win+. / Mac = Cmd+Ctrl+Space</small><br><br>
+
+        <button type="submit">Add Card</button>
+    </form>
+
+    <br>
+    <a href="/teacher/dashboard">Back to dashboard</a>
+</body>
+</html>

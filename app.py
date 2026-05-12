@@ -350,7 +350,11 @@ def student_collection(student_id):
     # create an array containing students collection to be passed into render_template
     # query student collectibles for collectibles with current student id
     collection = StudentCollectible.query.filter_by(student_id=student_id).all()
-    return render_template("student_collection.html", collection=collection, student=target_student)
+    rarity_order = {"legendary": 0, "rare": 1, "common": 2}
+
+    sorted_collection = sorted(collection, key=lambda x: (rarity_order.get(x.collectible.rarity, 99), x.collectible.name)
+    )
+    return render_template("student_collection.html", collection=sorted_collection, student=target_student)
 
 # Teacher home page - manage their classes and students
 @app.route("/teacher/dashboard", methods=["POST", "GET"])
@@ -477,6 +481,41 @@ def teacher_class_questions(join_code):
     questions = Question.query.filter_by(class_id=cls.id).all()
     return render_template("teacher_questions.html", questions=questions, current_class=cls)
 
+@app.route("/teacher/collectible/new/<join_code>", methods=["GET", "POST"])
+@login_required
+def teacher_new_collectible(join_code):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+
+    cls = Class.query.filter_by(join_code=join_code, teacher_id=current_user.id).first_or_404()
+
+    if request.method == "POST":
+        name        = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        rarity      = request.form.get("rarity", "common")
+        emoji       = request.form.get("emoji", "").strip()
+
+        if not emoji:
+            rarity_defaults = {
+                "common":    "❤️",
+                "rare":      "👍",
+                "legendary": "👑"
+            }
+            emoji = rarity_defaults.get(rarity, "❤️")
+
+        c = Collectible(
+            class_id=cls.id,
+            name=name,
+            description=description,
+            rarity=rarity,
+            emoji=emoji
+        )
+        db.session.add(c)
+        db.session.commit()
+        flash(f"Card '{name}' added!")
+        return redirect(url_for("teacher_dashboard"))
+
+    return render_template("teacher_collectible_new.html", cls=cls)
 
 # Toggle a question active/inactive - turns on/off whether students can see it
 @app.route("/teacher/question/<int:question_id>/toggle", methods=["POST"])
