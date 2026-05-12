@@ -24,7 +24,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "dev-secret-key"  # Secret key for sessions\
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok =True)
-socketio = SocketIO(app)  # Initialize SocketIO for real-time features (not used yet)
+socketio = SocketIO(app, async_mode="gevent")  # Initialize SocketIO for real-time features (not used yet)
 # Initialize the database with the app
 
 db.init_app(app)
