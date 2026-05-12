@@ -44,6 +44,13 @@ class UserAdminView(ModelView):
     column_exclude_list = ["password"]  # Hide password column in list view
     form_excluded_columns = ["password"]  # Hide password in form (use password_input instead)
     form_columns = ["first_name", "last_name", "username", "password_input", "email", "role", "points"]  # Fields admin can edit
+    form_choices = {
+        'role': [
+            ('student', 'Student'),
+            ('teacher', 'Teacher'),
+            ('admin', 'Admin')
+        ]
+    }
     form_extra_fields = {
         "password_input": PasswordField("Password")  # Special password field for admin to enter
     }
