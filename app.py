@@ -45,12 +45,19 @@ def load_user(user_id):
 
 class AdminView(AdminIndexView):
     pass
-
+    
 # Admin panel configuration - controls what admin can see and edit for users
 class UserAdminView(ModelView):
     column_exclude_list = ["password"]  # Hide password column in list view
     form_excluded_columns = ["password"]  # Hide password in form (use password_input instead)
     form_columns = ["first_name", "last_name", "username", "password_input", "email", "role", "points"]  # Fields admin can edit
+    form_choices = {
+        'role': [
+            ('student', 'Student'),
+            ('teacher', 'Teacher'),
+            ('admin', 'Admin')
+        ]
+    }
     form_extra_fields = {
         "password_input": PasswordField("Password")  # Special password field for admin to enter
     }
@@ -308,18 +315,25 @@ def student_buy_card():
         return redirect(url_for("student_shop"))
 
     # Make sure student is enrolled in at least one class
-    enrollment = ClassEnrollment.query.filter_by(
+    enrollments = ClassEnrollment.query.filter_by(
         student_id=current_user.id, status="active"
-    ).first()
-    if not enrollment:
+    ).all()
+    if not enrollments:
         flash("You are not enrolled in a class.")
         return redirect(url_for("student_shop"))
+    
+    valid_classes = [e.class_ref for e in enrollments if len(e.class_ref.collectibles) > 0]
+
+    # 3. Check if we found ANY classes with cards
+    if not valid_classes:
+        flash("None of your enrolled classes have collectibles available yet.")
+        return redirect(url_for("student_shop"))
+    
+    # pick a random class
+    random_class = random.choice(valid_classes)
 
     # Get all collectible cards available in their class
-    pool = Collectible.query.filter_by(class_id=enrollment.class_id).all()
-    if not pool:
-        flash("No collectibles available yet.")
-        return redirect(url_for("student_shop"))
+    pool = random_class.collectibles
 
     # Calculate odds for each card based on rarity (rarer cards less likely)
     weights = []
@@ -335,9 +349,13 @@ def student_buy_card():
     db.session.add(sc)
     db.session.commit()
 
-    flash(f"You got: {chosen.emoji} {chosen.name} ({chosen.rarity})")
-    return redirect(url_for("student_shop"))
+    return redirect(url_for("student_card_reveal", collectible_id=chosen.id))
 
+@app.route("/student/card/reveal/<int:collectible_id>")
+@login_required
+def student_card_reveal(collectible_id):
+    collectible = Collectible.query.get_or_404(collectible_id)
+    return render_template("card_reveal.html", collectible=collectible)
 
 # Shop page - students can spend points to buy collectible cards
 @app.route("/student/shop")
@@ -354,21 +372,26 @@ def student_study():
     if current_user.role != "student":
         return redirect(url_for("login"))
 
-    # Get student's enrolled class
-    enrollment = ClassEnrollment.query.filter_by(
+    # Make sure student is enrolled in at least one class
+    enrollments = ClassEnrollment.query.filter_by(
         student_id=current_user.id, status="active"
-    ).first()
-    if not enrollment:
+    ).all()
+    if not enrollments:
         flash("You are not enrolled in a class.")
         return redirect(url_for("student_dashboard"))
+    
+    valid_classes = [e.class_ref for e in enrollments if len(e.class_ref.questions) > 0]
 
-    # Get all active questions for their class
-    questions = Question.query.filter_by(
-        class_id=enrollment.class_id, is_active=True
-    ).all()
-    if not questions:
+    # 3. Check if we found ANY classes with cards
+    if not valid_classes:
         flash("No questions available yet.")
         return redirect(url_for("student_dashboard"))
+    
+    # pick a random class
+    random_class = random.choice(valid_classes)
+
+    # Get all active questions for their class
+    questions = random_class.questions
 
     # Pick a random question
     question = random.choice(questions)
@@ -394,15 +417,20 @@ def student_study_answer():
     return render_template("student_study.html", question=question, chosen=chosen, correct=correct, answered=True)
 
 # Shows only the current student's collection
-@app.route("/student/collection")
+@app.route("/student/collection/<int:student_id>")
 @login_required
-def student_collection():
+def student_collection(student_id):
     if current_user.role != "student":
         return redirect(url_for("login"))
+    target_student = User.query.get_or_404(student_id)
     # create an array containing students collection to be passed into render_template
     # query student collectibles for collectibles with current student id
-    collection = StudentCollectible.query.filter_by(student_id=current_user.id).all()
-    return render_template("student_collection.html", collection=collection)
+    collection = StudentCollectible.query.filter_by(student_id=student_id).all()
+    rarity_order = {"legendary": 0, "rare": 1, "common": 2}
+
+    sorted_collection = sorted(collection, key=lambda x: (rarity_order.get(x.collectible.rarity, 99), x.collectible.name)
+    )
+    return render_template("student_collection.html", collection=sorted_collection, student=target_student)
 
 # Teacher home page - manage their classes and students
 @app.route("/teacher/dashboard", methods=["POST", "GET"])
@@ -529,6 +557,41 @@ def teacher_class_questions(join_code):
     questions = Question.query.filter_by(class_id=cls.id).all()
     return render_template("teacher_questions.html", questions=questions, current_class=cls)
 
+@app.route("/teacher/collectible/new/<join_code>", methods=["GET", "POST"])
+@login_required
+def teacher_new_collectible(join_code):
+    if current_user.role != "teacher":
+        return redirect(url_for("login"))
+
+    cls = Class.query.filter_by(join_code=join_code, teacher_id=current_user.id).first_or_404()
+
+    if request.method == "POST":
+        name        = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        rarity      = request.form.get("rarity", "common")
+        emoji       = request.form.get("emoji", "").strip()
+
+        if not emoji:
+            rarity_defaults = {
+                "common":    "❤️",
+                "rare":      "👍",
+                "legendary": "👑"
+            }
+            emoji = rarity_defaults.get(rarity, "❤️")
+
+        c = Collectible(
+            class_id=cls.id,
+            name=name,
+            description=description,
+            rarity=rarity,
+            emoji=emoji
+        )
+        db.session.add(c)
+        db.session.commit()
+        flash(f"Card '{name}' added!")
+        return redirect(url_for("teacher_dashboard"))
+
+    return render_template("teacher_collectible_new.html", cls=cls)
 
 # Toggle a question active/inactive - turns on/off whether students can see it
 @app.route("/teacher/question/<int:question_id>/toggle", methods=["POST"])

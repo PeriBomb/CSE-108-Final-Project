@@ -6,25 +6,64 @@
     <link rel="stylesheet" href="/static/styles.css">
     <meta charset="UTF-8">
     <title>Collection</title>
+    <style>
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 16px 0;
+        }
+
+        .card {
+            width: 100px;
+            height: 150px;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .rarity-common    { border: 2px solid gray;      background: #f9f9f9; }
+        .rarity-rare      { border: 2px solid royalblue; background: #f0f4ff; }
+        .rarity-legendary { 
+            border: 2px solid gold; 
+            background: #fffbea;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%   { box-shadow: 0 0 5px gold; }
+            50%  { box-shadow: 0 0 18px gold; }
+            100% { box-shadow: 0 0 5px gold; }
+        }
+
+        .card-emoji    { font-size: 36px; }
+        .card-name     { font-size: 0.7rem; font-weight: bold; }
+        .card-rarity   { font-size: 0.6rem; color: gray; }
+    </style>
 </head>
 <body>
     <h1>Collection</h1>
-    <h3 class="points"><Strong>Points: {{ current_user.points }}</Strong></h3>
-    
-    <div>
-        <h3>Your Trading Cards:</h3>
-        <ul>
-            {% for instance in current_user.owned_collectibles %}
-                <li>
-                    <strong>{{ instance.collectible.name }}</strong> 
-                </li>
-            {% else %}
-                <p>Your collection is currently empty</p>
-            {% endfor %}
-        </ul>
-    </div>
+    <h3 class="points"><strong>Points: {{ current_user.points }}</strong></h3>
 
+    {% if collection %}
+        <div class="card-grid">
+            {% for instance in collection %}
+                <div class="card rarity-{{ instance.collectible.rarity }}">
+                    <div class="card-emoji">{{ instance.collectible.emoji }}</div>
+                    <div class="card-name">{{ instance.collectible.name }}</div>
+                    <div class="card-rarity">{{ instance.collectible.rarity }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>This collection is currently empty.</p>
+    {% endif %}
+
+    <br>
     <a href="/student/dashboard">Back to dashboard</a>
 </body>
 </html>
-

@@ -29,7 +29,8 @@
 
     {% else %}
     <section>
-        <p><strong>{{ question.text }}</strong></p>
+        <p><strong>Class: {{ question.class_ref.name }}</strong></p>
+        <p><strong>Question: {{ question.text }}</strong></p>
         <form method="POST" action="/student/study/answer">
             <input type="hidden" name="question_id" value="{{ question.id }}">
 
